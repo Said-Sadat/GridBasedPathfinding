@@ -2,7 +2,6 @@
 
 
 #include "GridManager.h"
-
 #include "Components/InstancedStaticMeshComponent.h"
 
 // Sets default values
@@ -28,5 +27,27 @@ void AGridManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AGridManager::SpawnGrid()
+{
+	InstancedStaticMesh->ClearInstances();
+	InstancedStaticMesh->SetStaticMesh(GridShapesStruct.FlatMesh);
+
+	FVector GridTileCount3D = FVector(GridTileCount.X, GridTileCount.Y, 0);
+	
+	GridBottomLeftCornerLocation = GridCenterLocation - GridTileSize * (GridTileCount3D / 2);
+
+	for(int x = 0; x < GridTileCount.X; x++)
+	{
+		for(int y = 0; y < GridTileCount.Y; y++)
+		{
+			FTransform tile;
+			tile.SetLocation(GridBottomLeftCornerLocation + FVector(x,y,0) * GridTileSize);
+			tile.SetScale3D(GridTileSize / GridShapesStruct.MeshSize);
+
+			InstancedStaticMesh->AddInstance(tile);
+		}
+	}
 }
 
