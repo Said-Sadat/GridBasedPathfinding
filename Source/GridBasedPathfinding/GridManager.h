@@ -13,6 +13,9 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AActor
 	GENERATED_BODY()
 
 	FVector GridBottomLeftCornerLocation;
+
+	FVector CalculateGridSnappedCenter();
+	FVector CalculateGridBottomLeftCorner();
 	
 public:	
 	// Sets default values for this actor's properties
