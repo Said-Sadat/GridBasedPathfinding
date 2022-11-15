@@ -14,19 +14,12 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AActor
 
 	FVector GridBottomLeftCornerLocation;
 
-	FVector CalculateGridSnappedCenter();
-	FVector CalculateGridBottomLeftCorner();
+	FVector CalculateGridSnappedCenter(FVector CenterLocation, FVector TileSize);
+	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 	
 public:	
 	// Sets default values for this actor's properties
 	AGridManager();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere)
-	UInstancedStaticMeshComponent* InstancedStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	FVector GridCenterLocation;
@@ -37,6 +30,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	FVector2D GridTileCount;
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere)
+	UInstancedStaticMeshComponent* InstancedStaticMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	FGridShapesStruct GridShapesStruct;
 	
@@ -45,6 +45,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnGrid();
-
+	void SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 };

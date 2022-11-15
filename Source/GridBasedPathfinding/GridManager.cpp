@@ -30,44 +30,44 @@ void AGridManager::Tick(float DeltaTime)
 
 }
 
-void AGridManager::SpawnGrid()
+void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	InstancedStaticMesh->ClearInstances();
 	InstancedStaticMesh->SetStaticMesh(GridShapesStruct.FlatMesh);
 
-	GridBottomLeftCornerLocation = CalculateGridBottomLeftCorner();
+	GridBottomLeftCornerLocation = CalculateGridBottomLeftCorner(CenterLocation, TileSize, TileCount);
 
-	GridTileCount.X = UKismetMathLibrary::Round(GridTileCount.X);
-	GridTileCount.Y = UKismetMathLibrary::Round(GridTileCount.Y);
+	TileCount.X = UKismetMathLibrary::Round(TileCount.X);
+	TileCount.Y = UKismetMathLibrary::Round(TileCount.Y);
 
-	for(int x = 0; x < GridTileCount.X; x++)
+	for(int x = 0; x < TileCount.X; x++)
 	{
-		for(int y = 0; y < GridTileCount.Y; y++)
+		for(int y = 0; y < TileCount.Y; y++)
 		{
 			FTransform tile;
-			tile.SetLocation(GridBottomLeftCornerLocation + FVector(x,y,0) * GridTileSize);
-			tile.SetScale3D(GridTileSize / GridShapesStruct.MeshSize);
+			tile.SetLocation(GridBottomLeftCornerLocation + FVector(x,y,0) * TileSize);
+			tile.SetScale3D(TileSize / GridShapesStruct.MeshSize);
 
 			InstancedStaticMesh->AddInstance(tile, true);
 		}
 	}
 }
 
-FVector AGridManager::CalculateGridBottomLeftCorner()
+FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
-	FVector GridTileCount3D = FVector(GridTileCount.X, GridTileCount.Y, 0);
+	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
 
-	if(!UBFLUtilities::IsFloatEven(GridTileCount.X))
+	if(!UBFLUtilities::IsFloatEven(TileCount.X))
 		GridTileCount3D.X -= 1;
 	
-	if(!UBFLUtilities::IsFloatEven(GridTileCount.Y))
+	if(!UBFLUtilities::IsFloatEven(TileCount.Y))
 		GridTileCount3D.Y -= 1;
 	
-	return CalculateGridSnappedCenter() - GridTileSize * (GridTileCount3D / 2);
+	return CalculateGridSnappedCenter(CenterLocation, TileSize) - TileSize * (GridTileCount3D / 2);
 }
 
-FVector AGridManager::CalculateGridSnappedCenter()
+FVector AGridManager::CalculateGridSnappedCenter(FVector CenterLocation, FVector TileSize)
 {
-	return UBFLUtilities::SnapVectors(GridCenterLocation, GridTileSize);
+	return UBFLUtilities::SnapVectors(CenterLocation, GridTileSize);
 }
 
