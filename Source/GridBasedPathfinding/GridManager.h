@@ -16,6 +16,7 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AActor
 
 	FVector CalculateGridSnappedCenter(FVector CenterLocation, FVector TileSize);
 	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
+	bool GroundScanner(FVector ScanLocation);
 	
 public:	
 	// Sets default values for this actor's properties
@@ -29,6 +30,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	FVector2D GridTileCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	bool ScanFloor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	float ScanRadius;
 
 protected:
 	// Called when the game starts or when spawned
