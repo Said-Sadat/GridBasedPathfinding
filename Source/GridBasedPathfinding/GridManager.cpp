@@ -51,30 +51,7 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 			tile.SetScale3D(TileSize / GridShapesStruct.MeshSize);
 
 			if(ScanFloor)
-			{
-				TArray<FHitResult> OutHits;
-				TArray<AActor*> IgnoreArray;
-				
-				UKismetSystemLibrary::SphereTraceMulti(GetWorld(),
-					tile.GetLocation() + FVector(0,0,1000),
-					tile.GetLocation() + FVector(0,0,-1000),
-					TileSize.X / 3,
-					UEngineTypes::ConvertToTraceType(Ground),
-					false,
-					IgnoreArray,
-					EDrawDebugTrace::ForDuration,
-					OutHits,
-					false);
-
-				if(!OutHits.IsEmpty())
-				{
-					FVector TileLocation = tile.GetLocation();
-					TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3 + OffsetFromGround;
-					tile.SetLocation(TileLocation);
-					
-					InstancedStaticMesh->AddInstance(tile, true);
-				}
-			}
+				SnapTileToFloor(tile, TileSize);
 			else
 				InstancedStaticMesh->AddInstance(tile, true);
 		}
@@ -91,17 +68,31 @@ FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVec
 	if(!UBFLUtilities::IsFloatEven(TileCount.Y))
 		GridTileCount3D.Y -= 1;
 	
-	//return CalculateGridSnappedCenter(CenterLocation, TileSize) - TileSize * (GridTileCount3D / 2);
 	return CenterLocation - TileSize * (GridTileCount3D / 2);
 }
 
-bool AGridManager::GroundScanner(FVector ScanLocation)
+void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize)
 {
-	return false;
-}
+	TArray<FHitResult> OutHits;
+	TArray<AActor*> IgnoreArray;
+				
+	UKismetSystemLibrary::SphereTraceMulti(GetWorld(),
+		TileTransform.GetLocation() + FVector(0,0,1000),
+		TileTransform.GetLocation() + FVector(0,0,-1000),
+		TileSize.X / 3,
+		UEngineTypes::ConvertToTraceType(Ground),
+		false,
+		IgnoreArray,
+		EDrawDebugTrace::ForDuration,
+		OutHits,
+		false);
 
-FVector AGridManager::CalculateGridSnappedCenter(FVector CenterLocation, FVector TileSize)
-{
-	return UBFLUtilities::SnapVectors(CenterLocation, GridTileSize);
+	if(!OutHits.IsEmpty())
+	{
+		FVector TileLocation = TileTransform.GetLocation();
+		TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3 + OffsetFromGround;
+		TileTransform.SetLocation(TileLocation);
+					
+		InstancedStaticMesh->AddInstance(TileTransform, true);
+	}
 }
-

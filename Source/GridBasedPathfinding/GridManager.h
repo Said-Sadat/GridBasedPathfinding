@@ -14,10 +14,8 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AActor
 
 	FVector GridBottomLeftCornerLocation;
 
-	FVector CalculateGridSnappedCenter(FVector CenterLocation, FVector TileSize);
 	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
-	bool GroundScanner(FVector ScanLocation);
-	
+	void SnapTileToFloor(FTransform TileTransform, FVector TileSize);
 public:	
 	// Sets default values for this actor's properties
 	AGridManager();
