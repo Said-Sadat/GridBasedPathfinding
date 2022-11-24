@@ -4,7 +4,6 @@
 #include "GridManager.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "BFLUtilities.h"
-#include "Animation/AnimInstanceProxy.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -31,7 +30,6 @@ void AGridManager::BeginPlay()
 void AGridManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
@@ -71,17 +69,14 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 				if(!OutHits.IsEmpty())
 				{
 					FVector TileLocation = tile.GetLocation();
-					//TileLocation.Z = UKismetMathLibrary::GridSnap_Float(OutHits[0].Location.Z, GridTileSize.Z);
-					TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3;
+					TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3 + OffsetFromGround;
 					tile.SetLocation(TileLocation);
 					
 					InstancedStaticMesh->AddInstance(tile, true);
 				}
 			}
 			else
-			{
 				InstancedStaticMesh->AddInstance(tile, true);
-			}
 		}
 	}
 }

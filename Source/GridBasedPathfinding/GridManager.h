@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	float ScanRadius;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	float OffsetFromGround;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
