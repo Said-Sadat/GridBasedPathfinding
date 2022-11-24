@@ -4,6 +4,7 @@
 #include "GridManager.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "BFLUtilities.h"
+#include "GridModifier.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -17,7 +18,6 @@ AGridManager::AGridManager()
 
 	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
 	RootComponent = InstancedStaticMesh;
-
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +58,21 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 	}
 }
 
+bool AGridManager::IsWalkable(ETileTypes TileType)
+{
+	switch (TileType)
+	{
+	case None:
+		return false;
+	case Normal:
+		return true;
+	case Obstacle:
+		return false;
+	default:
+		return false;
+	}
+}
+
 FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
@@ -76,8 +91,7 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize)
 	TArray<FHitResult> OutHits;
 	TArray<AActor*> IgnoreArray;
 				
-	UKismetSystemLibrary::SphereTraceMulti(GetWorld(),
-		TileTransform.GetLocation() + FVector(0,0,1000),
+	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), TileTransform.GetLocation() + FVector(0,0,1000),
 		TileTransform.GetLocation() + FVector(0,0,-1000),
 		TileSize.X / 3,
 		UEngineTypes::ConvertToTraceType(Ground),
@@ -87,12 +101,20 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize)
 		OutHits,
 		false);
 
+	for(auto OutHit : OutHits)
+	{
+		AGridModifier* GridModifier = Cast<AGridModifier>(OutHit.GetActor());
+		if(GridModifier)
+			if(!IsWalkable(GridModifier->TileType))
+				return;
+	}
+
 	if(!OutHits.IsEmpty())
 	{
 		FVector TileLocation = TileTransform.GetLocation();
 		TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3 + OffsetFromGround;
 		TileTransform.SetLocation(TileLocation);
-					
+
 		InstancedStaticMesh->AddInstance(TileTransform, true);
 	}
 }

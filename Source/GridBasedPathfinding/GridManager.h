@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GridModifier.h"
 #include "GameFramework/Actor.h"
 #include "GridShapesStruct.h"
 #include "GridManager.generated.h"
@@ -16,6 +17,7 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AActor
 
 	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 	void SnapTileToFloor(FTransform TileTransform, FVector TileSize);
+	
 public:	
 	// Sets default values for this actor's properties
 	AGridManager();
@@ -54,4 +56,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsWalkable(ETileTypes TileType);
 };
