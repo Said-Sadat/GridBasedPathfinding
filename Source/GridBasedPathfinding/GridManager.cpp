@@ -5,10 +5,12 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "BFLUtilities.h"
 #include "GridModifier.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #define Ground ECC_GameTraceChannel1
+#define Grid ECC_GameTraceChannel2
 
 // Sets default values
 AGridManager::AGridManager()
@@ -18,12 +20,15 @@ AGridManager::AGridManager()
 
 	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
 	RootComponent = InstancedStaticMesh;
+
+
 }
 
 // Called when the game starts or when spawned
 void AGridManager::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
@@ -71,6 +76,33 @@ bool AGridManager::IsWalkable(ETileTypes TileType)
 	default:
 		return false;
 	}
+}
+
+FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerController)
+{
+	FHitResult HitResult;
+	
+	if(!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
+		return FVector(0,0,0);
+	}
+	
+	PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(Grid), false, HitResult);
+
+	if(HitResult.GetActor())
+		return HitResult.Location;
+
+	FVector WorldLocation;
+	FVector WorldDirection;
+	
+	PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
+
+	FVector Intersection = FMath::LinePlaneIntersection(WorldLocation,
+		(WorldDirection * 1000) + WorldLocation,
+		UKismetMathLibrary::MakePlaneFromPointAndNormal(GridCenterLocation, FVector(0,0,1)));
+
+	return Intersection;
 }
 
 FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)

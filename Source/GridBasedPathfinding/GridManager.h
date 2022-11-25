@@ -59,4 +59,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsWalkable(ETileTypes TileType);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetCursorLocationOnGrid(APlayerController* PlayerController);
+
+	UFUNCTION(BlueprintCallable)
+	FVector WorldPositionToGrid(FVector WorldPosition);
 };
