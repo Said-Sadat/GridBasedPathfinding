@@ -24,3 +24,18 @@ bool UBFLUtilities::IsFloatEven(float testfloat)
 
 	return  false;
 }
+
+bool UBFLUtilities::IsTileWalkable(ETileTypes TileType)
+{
+	switch (TileType)
+	{
+	case None:
+		return false;
+	case Normal:
+		return true;
+	case Obstacle:
+		return false;
+	default:
+		return false;
+	}
+}

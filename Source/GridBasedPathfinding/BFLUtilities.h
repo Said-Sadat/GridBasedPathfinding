@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GridModifier.h"
 #include "BFLUtilities.generated.h"
 
 /**
@@ -20,4 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static bool IsFloatEven(float testfloat);
+
+	UFUNCTION(BlueprintCallable)
+	static bool IsTileWalkable(ETileTypes TileType);
 };

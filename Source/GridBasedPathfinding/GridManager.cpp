@@ -17,18 +17,12 @@ AGridManager::AGridManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
-	RootComponent = InstancedStaticMesh;
-
-
 }
 
 // Called when the game starts or when spawned
 void AGridManager::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
@@ -39,9 +33,9 @@ void AGridManager::Tick(float DeltaTime)
 
 void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
-	InstancedStaticMesh->ClearInstances();
-	InstancedStaticMesh->SetStaticMesh(GridShapesStruct.FlatMesh);
-
+	GridTiles.clear();
+	InitializeGridMeshInstance(GridShapesStruct.FlatMesh);
+	
 	GridBottomLeftCornerLocation = CalculateGridBottomLeftCorner(CenterLocation, TileSize, TileCount);
 
 	TileCount.X = UKismetMathLibrary::Round(TileCount.X);
@@ -52,29 +46,15 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 		for(int y = 0; y < TileCount.Y; y++)
 		{
 			FTransform tile;
-			tile.SetLocation(GridBottomLeftCornerLocation + FVector(x,y,0) * TileSize);
-			tile.SetScale3D(TileSize / GridShapesStruct.MeshSize);
+			FVector TileLocation = GridBottomLeftCornerLocation + FVector(x,y,0) * TileSize;
+			tile.SetLocation(TileLocation);
+			tile.SetScale3D(TileSize / GridShapesStruct.MeshSize); 
 
 			if(ScanFloor)
-				SnapTileToFloor(tile, TileSize);
+				SnapTileToFloor(tile, TileSize, FVector2D(x,y));
 			else
-				InstancedStaticMesh->AddInstance(tile, true);
+				AddGridTile(FTileData(FVector2D(x,y), ETileTypes::Normal, tile));
 		}
-	}
-}
-
-bool AGridManager::IsWalkable(ETileTypes TileType)
-{
-	switch (TileType)
-	{
-	case None:
-		return false;
-	case Normal:
-		return true;
-	case Obstacle:
-		return false;
-	default:
-		return false;
 	}
 }
 
@@ -105,6 +85,23 @@ FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerControlle
 	return Intersection;
 }
 
+FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
+{
+	FVector LocationOnGrid = WorldPosition - GridBottomLeftCornerLocation;
+	LocationOnGrid = UBFLUtilities::SnapVectors(LocationOnGrid, GridTileSize);
+
+	FVector2D SnappedLocationOnGrid = FVector2D(LocationOnGrid);
+
+	return SnappedLocationOnGrid / FVector2D(GridTileSize);
+}
+
+void AGridManager::AddGridTile(FTileData TileData)
+{
+	GridTiles[TileData.Index] = TileData;
+	
+	UpdateGrid(TileData);
+}
+
 FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
@@ -118,7 +115,7 @@ FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVec
 	return CenterLocation - TileSize * (GridTileCount3D / 2);
 }
 
-void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize)
+void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex)
 {
 	TArray<FHitResult> OutHits;
 	TArray<AActor*> IgnoreArray;
@@ -136,17 +133,16 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize)
 	for(auto OutHit : OutHits)
 	{
 		AGridModifier* GridModifier = Cast<AGridModifier>(OutHit.GetActor());
+		
 		if(GridModifier)
-			if(!IsWalkable(GridModifier->TileType))
+			if(!UBFLUtilities::IsTileWalkable(GridModifier->TileType))
 				return;
-	}
 
-	if(!OutHits.IsEmpty())
-	{
 		FVector TileLocation = TileTransform.GetLocation();
-		TileLocation.Z = OutHits[0].Location.Z - TileSize.X/3 + OffsetFromGround;
+		TileLocation.Z = OutHit.Location.Z - TileSize.X/3 + OffsetFromGround;
 		TileTransform.SetLocation(TileLocation);
 
-		InstancedStaticMesh->AddInstance(TileTransform, true);
+		FTileData TileData = FTileData(TileIndex, ETileTypes::Normal, TileTransform);
+		AddGridTile(TileData);
 	}
 }

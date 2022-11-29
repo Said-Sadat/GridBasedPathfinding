@@ -3,20 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridModifier.h"
-#include "GameFramework/Actor.h"
+#include "Grid.h"
+#include "map"
 #include "GridShapesStruct.h"
+#include "TileData.h"
 #include "GridManager.generated.h"
 
 UCLASS()
-class GRIDBASEDPATHFINDING_API AGridManager : public AActor
+class GRIDBASEDPATHFINDING_API AGridManager : public AGrid
 {
 	GENERATED_BODY()
 
 	FVector GridBottomLeftCornerLocation;
 
 	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
-	void SnapTileToFloor(FTransform TileTransform, FVector TileSize);
+	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
 	
 public:	
 	// Sets default values for this actor's properties
@@ -40,12 +41,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	float OffsetFromGround;
 
+	std::map<FVector2D, FTileData> GridTiles;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere)
-	UInstancedStaticMeshComponent* InstancedStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	FGridShapesStruct GridShapesStruct;
@@ -57,12 +57,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 
-	UFUNCTION(BlueprintCallable)
-	bool IsWalkable(ETileTypes TileType);
-
+	void AddGridTile(FTileData TileData);
+	
 	UFUNCTION(BlueprintCallable)
 	FVector GetCursorLocationOnGrid(APlayerController* PlayerController);
 
 	UFUNCTION(BlueprintCallable)
-	FVector WorldPositionToGrid(FVector WorldPosition);
+	FVector2D WorldPositionToGrid(FVector WorldPosition);
+
 };
