@@ -91,3 +91,15 @@ void AGrid::UpdateGrid(FTileData TileData)
 	AddInstance(TileData.Index, TileData.Transform);
 }
 
+FVector AGrid::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
+{
+	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
+
+	if(!UBFLUtilities::IsFloatEven(TileCount.X))
+		GridTileCount3D.X -= 1;
+	
+	if(!UBFLUtilities::IsFloatEven(TileCount.Y))
+		GridTileCount3D.Y -= 1;
+	
+	return CenterLocation - TileSize * (GridTileCount3D / 2);
+}

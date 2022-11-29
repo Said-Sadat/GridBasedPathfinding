@@ -20,14 +20,28 @@ public:
 	TArray<FVector2D> InstanceIndex;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid", meta=(AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	FVector GridCenterLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	FVector GridBottomLeftCornerLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	FVector GridTileSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	FVector2D GridTileCount;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	float GridOffset;
+	
+	UPROPERTY(VisibleAnywhere)
+	UInstancedStaticMeshComponent* InstancedStaticMesh;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	UInstancedStaticMeshComponent* InstancedStaticMesh;
+	FVector CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 
 public:	
 	// Called every frame
@@ -51,5 +65,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateGrid(FTileData TileData);
-
 };

@@ -73,26 +73,17 @@ FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerControlle
 	if(HitResult.GetActor())
 		return HitResult.Location;
 
-	FVector WorldLocation;
-	FVector WorldDirection;
-	
-	PlayerController->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
-
-	FVector Intersection = FMath::LinePlaneIntersection(WorldLocation,
-		(WorldDirection * 1000) + WorldLocation,
-		UKismetMathLibrary::MakePlaneFromPointAndNormal(GridCenterLocation, FVector(0,0,1)));
-
-	return Intersection;
+	return FVector(1000,1000,1000);
 }
 
 FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
 {
-	FVector LocationOnGrid = WorldPosition - GridBottomLeftCornerLocation;
+	FVector LocationOnGrid;
+	LocationOnGrid = WorldPosition - GridBottomLeftCornerLocation;
 	LocationOnGrid = UBFLUtilities::SnapVectors(LocationOnGrid, GridTileSize);
-
-	FVector2D SnappedLocationOnGrid = FVector2D(LocationOnGrid);
-
-	return SnappedLocationOnGrid / FVector2D(GridTileSize);
+	LocationOnGrid /= GridTileSize;
+	
+	return FVector2D(LocationOnGrid);
 }
 
 void AGridManager::AddGridTile(FTileData TileData)
@@ -100,19 +91,6 @@ void AGridManager::AddGridTile(FTileData TileData)
 	GridTiles[TileData.Index] = TileData;
 	
 	UpdateGrid(TileData);
-}
-
-FVector AGridManager::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
-{
-	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
-
-	if(!UBFLUtilities::IsFloatEven(TileCount.X))
-		GridTileCount3D.X -= 1;
-	
-	if(!UBFLUtilities::IsFloatEven(TileCount.Y))
-		GridTileCount3D.Y -= 1;
-	
-	return CenterLocation - TileSize * (GridTileCount3D / 2);
 }
 
 void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex)
@@ -139,7 +117,7 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 				return;
 
 		FVector TileLocation = TileTransform.GetLocation();
-		TileLocation.Z = OutHit.Location.Z - TileSize.X/3 + OffsetFromGround;
+		TileLocation.Z = OutHit.Location.Z - TileSize.X/3;
 		TileTransform.SetLocation(TileLocation);
 
 		FTileData TileData = FTileData(TileIndex, ETileTypes::Normal, TileTransform);
