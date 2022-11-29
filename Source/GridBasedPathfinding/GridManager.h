@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Grid.h"
-#include "map"
 #include "GridShapesStruct.h"
 #include "TileData.h"
 #include "GridManager.generated.h"
@@ -24,7 +23,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	float ScanRadius;
 
-	std::map<FVector2D, FTileData> GridTiles;
+	UPROPERTY(BlueprintReadWrite, Category= "Grid")
+	TMap<FVector2D, FTileData> GridTiles;
 
 protected:
 	// Called when the game starts or when spawned

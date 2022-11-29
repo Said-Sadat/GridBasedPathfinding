@@ -2,7 +2,6 @@
 
 
 #include "GridManager.h"
-#include "Components/InstancedStaticMeshComponent.h"
 #include "BFLUtilities.h"
 #include "GridModifier.h"
 #include "Kismet/GameplayStatics.h"
@@ -33,7 +32,7 @@ void AGridManager::Tick(float DeltaTime)
 
 void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
-	GridTiles.clear();
+	GridTiles.Empty();
 	InitializeGridMeshInstance(GridShapesStruct.FlatMesh);
 	
 	GridBottomLeftCornerLocation = CalculateGridBottomLeftCorner(CenterLocation, TileSize, TileCount);
@@ -53,7 +52,7 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 			if(ScanFloor)
 				SnapTileToFloor(tile, TileSize, FVector2D(x,y));
 			else
-				AddGridTile(FTileData(FVector2D(x,y), ETileTypes::Normal, tile));
+				AddGridTile(FTileData(FVector2D(x,y), ETileTypes::Normal, tile)); 
 		}
 	}
 
@@ -90,8 +89,7 @@ FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
 
 void AGridManager::AddGridTile(FTileData TileData)
 {
-	GridTiles[TileData.Index] = TileData;
-	
+	GridTiles.Add(TileData.Index, TileData);
 	UpdateGrid(TileData);
 }
 
