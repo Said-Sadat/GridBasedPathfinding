@@ -56,6 +56,8 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 				AddGridTile(FTileData(FVector2D(x,y), ETileTypes::Normal, tile));
 		}
 	}
+
+	SetOffsetFromGround(GridOffset);
 }
 
 FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerController)

@@ -42,8 +42,6 @@ void AGrid::InitializeGridMeshInstance(UStaticMesh* StaticMesh)
 	ClearInstances();
 	
 	InstancedStaticMesh->SetStaticMesh(StaticMesh);
-
-	SetOffsetFromGround(GridOffset);
 }
 
 void AGrid::SetOffsetFromGround(float Offset)
