@@ -3,6 +3,7 @@
 FTileData::FTileData()
 {
 	TileType = ETileTypes::Normal;
+	
 }
 
 FTileData::FTileData(FVector2D Index, ETileTypes TileType, FTransform Transform)

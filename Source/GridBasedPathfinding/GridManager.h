@@ -40,13 +40,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount);
 
+	UFUNCTION(BlueprintCallable)
 	void AddGridTile(FTileData TileData);
+
+	UFUNCTION(BlueprintCallable)
+	void AddStateToTile(FVector2D Index, ETileStates TileState);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveStateFromTile(FVector2D Index, ETileStates TileState);
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetCursorLocationOnGrid(APlayerController* PlayerController);
 
 	UFUNCTION(BlueprintCallable)
 	FVector2D WorldPositionToGrid(FVector WorldPosition);
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetTileIndexUnderCursor();
 
 	UFUNCTION(BlueprintCallable)
 	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);

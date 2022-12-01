@@ -29,7 +29,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterialInstance* FlatBoarderMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstance* FlatFilledMaterial;
 };

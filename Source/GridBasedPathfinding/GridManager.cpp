@@ -55,8 +55,6 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 				AddGridTile(FTileData(FVector2D(x,y), ETileTypes::Normal, tile)); 
 		}
 	}
-
-	SetOffsetFromGround(GridOffset);
 }
 
 FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerController)
@@ -87,10 +85,41 @@ FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
 	return FVector2D(LocationOnGrid);
 }
 
+FVector2D AGridManager::GetTileIndexUnderCursor()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(!PlayerController)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NO PLAYER CONTROLLER"));
+		return FVector2D(0,0);
+	}
+	return WorldPositionToGrid(GetCursorLocationOnGrid(PlayerController));
+}
+
 void AGridManager::AddGridTile(FTileData TileData)
 {
 	GridTiles.Add(TileData.Index, TileData);
 	UpdateGrid(TileData);
+}
+
+void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
+{
+	if(!GridTiles.Find(Index)) return;
+
+	FTileData TileData = *GridTiles.Find(Index);
+	TileData.TileStates.AddUnique(TileState);
+
+	AddGridTile(TileData);
+}
+
+void AGridManager::RemoveStateFromTile(FVector2D Index, ETileStates TileState)
+{
+	if(!GridTiles.Find(Index)) return;
+
+	FTileData TileData = *GridTiles.Find(Index);
+	TileData.TileStates.Remove(TileState);
+
+	AddGridTile(TileData);
 }
 
 void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex)

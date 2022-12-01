@@ -48,14 +48,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void InitializeGridMeshInstance(UStaticMesh* StaticMesh);
-	
-	void InitializeGridMeshInstance(UStaticMesh* StaticMesh, UMaterial* Material, FColor Color, ECollisionChannel Collision);
 
 	UFUNCTION(BlueprintCallable)
-	void SetOffsetFromGround(float Offset);
+	FTransform GetOffsetFromGround(FTransform Transform, float Offset);
 
 	UFUNCTION(BlueprintCallable)
-	void AddInstance(FVector2D Index, FTransform InstanceTransform);
+	void AddInstance(FVector2D Index, FTransform InstanceTransform, TArray<TEnumAsByte<ETileStates>> States);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveInstance(FVector2D Index); 
@@ -65,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateGrid(FTileData TileData);
+
+	UFUNCTION(BlueprintCallable)
+	FLinearColor GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States);
 };
