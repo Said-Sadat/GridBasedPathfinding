@@ -133,7 +133,7 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 		UEngineTypes::ConvertToTraceType(Ground),
 		false,
 		IgnoreArray,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		OutHits,
 		false);
 

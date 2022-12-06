@@ -17,6 +17,8 @@ void APlayerActions::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
 	TArray<AActor*> OutActors;
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridManager::StaticClass(), OutActors);
@@ -28,6 +30,8 @@ void APlayerActions::BeginPlay()
 	}
 
 	GridManager = Cast<AGridManager>(OutActors[0]);
+
+	PlayerController->InputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &APlayerActions::ClickOnTile);
 }
 
 // Called every frame
@@ -50,5 +54,21 @@ void APlayerActions::UpdateTileCursor()
 		
 	HoveredTile = TileIndex;
 	GridManager->AddStateToTile(HoveredTile, ETileStates::Hovered);
+}
+
+void APlayerActions::ClickOnTile()
+{
+	UE_LOG(LogTemp, Error, TEXT("CLICK"));
+
+	if(!GridManager) return;
+	
+	FVector2D TileIndex = GridManager->GetTileIndexUnderCursor();
+
+	if(SelectedTile == TileIndex) return;
+
+	GridManager->RemoveStateFromTile(SelectedTile, ETileStates::Selected);
+		
+	SelectedTile = TileIndex;
+	GridManager->AddStateToTile(SelectedTile, ETileStates::Selected);
 }
 

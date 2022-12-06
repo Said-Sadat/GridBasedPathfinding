@@ -5,14 +5,18 @@
 #include "CoreMinimal.h"
 #include "GridManager.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "PlayerActions.generated.h"
 
 UCLASS()
-class GRIDBASEDPATHFINDING_API APlayerActions : public AActor
+class GRIDBASEDPATHFINDING_API APlayerActions : public ACharacter
 {
 	GENERATED_BODY()
 
 	FVector2D HoveredTile;
+	FVector2D SelectedTile;
+
+	APlayerController* PlayerController;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -31,5 +35,7 @@ public:
 
 	UFUNCTION()
 	void UpdateTileCursor();
+
+	void ClickOnTile();
 
 };
