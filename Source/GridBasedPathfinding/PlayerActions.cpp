@@ -6,6 +6,25 @@
 #include "AStarPathfinding.h"
 #include "Kismet/GameplayStatics.h"
 
+void APlayerActions::FindPath(FTileData s, FTileData n)
+{
+	if(GridManager->GridTiles.Contains(s.Index) && GridManager->GridTiles.Contains(n.Index))
+	{
+		for (auto Node : Path)
+		{
+			GridManager->RemoveStateFromTile(Node.Index, ETileStates::Neighbour);
+		}
+		
+		Path.Empty();
+		Path = AStarPathfinding->AStarPathfinding(s, n, GridManager->GridTiles);
+		
+		for (auto Node : Path)
+		{
+			GridManager->AddStateToTile(Node.Index, ETileStates::Neighbour);
+		}
+	}
+}
+
 // Sets default values
 APlayerActions::APlayerActions()
 {
@@ -33,7 +52,6 @@ void APlayerActions::BeginPlay()
 	GridManager = Cast<AGridManager>(OutActors[0]);
 
 	AStarPathfinding = NewObject<UAStarPathfinding>();
-	AStarPathfinding->GridMap = GridManager->GridTiles;
 
 	PlayerController->InputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &APlayerActions::ClickOnTile);
 	PlayerController->InputComponent->BindAction("RMB", EInputEvent::IE_Pressed, this, &APlayerActions::RClickOnTile);
@@ -107,19 +125,6 @@ void APlayerActions::RClickOnTile()
 
 	EndNode = *GridManager->GridTiles.Find(TileIndex);
 
-	if(GridManager->GridTiles.Contains(StartNode.Index) && GridManager->GridTiles.Contains(EndNode.Index))
-	{
-		for (auto Node : Path)
-		{
-			GridManager->RemoveStateFromTile(Node.Index, ETileStates::Neighbour);
-		}
-
-		Path = AStarPathfinding->AStarPathfinding(StartNode, EndNode);
-		
-		for (auto Node : Path)
-		{
-			GridManager->AddStateToTile(Node.Index, ETileStates::Neighbour);
-		}
-	}
+	FindPath(StartNode, EndNode);
 }
 

@@ -10,11 +10,13 @@ UAStarPathfinding::UAStarPathfinding()
 {
 }
 
-TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTileData EndNode)
+TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTileData EndNode, TMap<FVector2D, FTileData> gridMap)
 {
 	TArray<FTileData> Empty;
 	TArray<FTileData> ClosedList;
 	TArray<FTileData> OpenList;
+
+	GridMap = gridMap;
 
 	StartNode.GCost = 0;
 	StartNode.HCost = CalculateHCost(StartNode, EndNode);
@@ -27,7 +29,8 @@ TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTile
 	{
 		FTileData currentNode = GetLowestFCostNode(OpenList);
 
-		if(IsDestination(StartNode, EndNode)) return CalculatePath(EndNode);
+		if(currentNode.Index == EndNode.Index)
+			return CalculatePath(currentNode);
 
 		OpenList.Remove(currentNode);
 
@@ -37,6 +40,8 @@ TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTile
 		
 		for (auto NeighbourNode : NeighbourTiles)
 		{
+			NeighbourNode.InitializeNode();
+			
 			if(ClosedList.Contains(NeighbourNode)) continue;
 
 			float tentativeGCost = currentNode.GCost + CalculateHCost(currentNode, NeighbourNode);
@@ -46,7 +51,9 @@ TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTile
 				NeighbourNode.GCost = tentativeGCost;
 				NeighbourNode.HCost = CalculateHCost(NeighbourNode,EndNode);
 				NeighbourNode.FCost = CalculateFCost(NeighbourNode.GCost, NeighbourNode.FCost);
-
+				
+				GridMap.Add(NeighbourNode.Index, NeighbourNode);
+				
 				if(!OpenList.Contains(NeighbourNode))
 					OpenList.Add(NeighbourNode);
 			}

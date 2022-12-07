@@ -24,6 +24,8 @@ class GRIDBASEDPATHFINDING_API APlayerActions : public AActor
 
 	APlayerController* PlayerController;
 	UAStarPathfinding* AStarPathfinding;
+
+	void FindPath(FTileData s, FTileData n);
 	
 public:	
 	// Sets default values for this actor's properties

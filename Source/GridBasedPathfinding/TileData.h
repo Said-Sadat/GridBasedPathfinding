@@ -39,6 +39,8 @@ public:
 	FTileData();
 	FTileData(FVector2D Index, ETileTypes TileType, FTransform Transform);
 
+	void InitializeNode();
+	
 	TArray<FVector2D> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap);
 	TArray<FTileData> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap, int filler);
 

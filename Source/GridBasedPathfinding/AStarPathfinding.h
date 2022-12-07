@@ -30,6 +30,6 @@ public:
 
 	TMap<FVector2D, FTileData> GridMap;
 
-	TArray<FTileData> AStarPathfinding(FTileData StartNode, FTileData EndNode);
+	TArray<FTileData> AStarPathfinding(FTileData StartNode, FTileData EndNode, TMap<FVector2D, FTileData> gridMap);
 
 };

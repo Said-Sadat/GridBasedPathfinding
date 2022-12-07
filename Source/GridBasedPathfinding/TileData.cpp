@@ -14,6 +14,15 @@ FTileData::FTileData(FVector2D Index, ETileTypes TileType, FTransform Transform)
 	this->Transform = Transform;
 }
 
+void FTileData::InitializeNode()
+{
+	FCost = 0;
+	GCost = 10000;
+	HCost = 0;
+
+	ParentIndex = FVector2D(-100,-100);
+}
+
 TArray<FVector2D> FTileData::GetTileNeigbours(TMap<FVector2D, FTileData> GridMap)
 {
 	TArray<FVector2D> Neighbours;
