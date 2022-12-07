@@ -3,20 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AStarPathfinding.h"
 #include "GridManager.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
 #include "PlayerActions.generated.h"
 
 UCLASS()
-class GRIDBASEDPATHFINDING_API APlayerActions : public ACharacter
+class GRIDBASEDPATHFINDING_API APlayerActions : public AActor
 {
 	GENERATED_BODY()
 
 	FVector2D HoveredTile;
 	FVector2D SelectedTile;
+	TArray<FVector2D> NeighbourTiles;
+
+	FTileData StartNode;
+	FTileData EndNode;
+	TArray<FTileData> Path;
 
 	APlayerController* PlayerController;
+	UAStarPathfinding* AStarPathfinding;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -37,5 +44,7 @@ public:
 	void UpdateTileCursor();
 
 	void ClickOnTile();
+
+	void RClickOnTile();
 
 };

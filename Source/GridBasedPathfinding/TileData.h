@@ -9,7 +9,8 @@ enum ETileStates
 {
 	NoState,
 	Hovered,
-	Selected
+	Selected,
+	Neighbour
 };
 
 USTRUCT(BlueprintType)
@@ -18,6 +19,11 @@ struct FTileData
 	GENERATED_BODY()
 
 public:
+	float FCost;
+	float GCost;
+	float HCost;
+	FVector2D ParentIndex;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D Index;
 	
@@ -32,4 +38,15 @@ public:
 
 	FTileData();
 	FTileData(FVector2D Index, ETileTypes TileType, FTransform Transform);
+
+	TArray<FVector2D> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap);
+	TArray<FTileData> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap, int filler);
+
+	inline bool operator==(FTileData a) const
+	{
+		if(a.Index == Index)
+			return true;
+
+		return false;
+	}
 };

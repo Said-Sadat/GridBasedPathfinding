@@ -3,6 +3,7 @@
 
 #include "PlayerActions.h"
 
+#include "AStarPathfinding.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -31,7 +32,11 @@ void APlayerActions::BeginPlay()
 
 	GridManager = Cast<AGridManager>(OutActors[0]);
 
+	AStarPathfinding = NewObject<UAStarPathfinding>();
+	AStarPathfinding->GridMap = GridManager->GridTiles;
+
 	PlayerController->InputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &APlayerActions::ClickOnTile);
+	PlayerController->InputComponent->BindAction("RMB", EInputEvent::IE_Pressed, this, &APlayerActions::RClickOnTile);
 }
 
 // Called every frame
@@ -39,7 +44,7 @@ void APlayerActions::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdateTileCursor();
+	//UpdateTileCursor();
 }
 
 void APlayerActions::UpdateTileCursor()
@@ -51,24 +56,70 @@ void APlayerActions::UpdateTileCursor()
 	if(HoveredTile == TileIndex) return;
 
 	GridManager->RemoveStateFromTile(HoveredTile, ETileStates::Hovered);
+
+	for (auto Tile : NeighbourTiles)
+		GridManager->RemoveStateFromTile(Tile, ETileStates::Neighbour);
+
+	NeighbourTiles.Empty();
 		
 	HoveredTile = TileIndex;
 	GridManager->AddStateToTile(HoveredTile, ETileStates::Hovered);
+
+	if(!GridManager->GridTiles.Find(TileIndex)) return;
+	
+	FTileData TileData = *GridManager->GridTiles.Find(TileIndex);
+
+	for (auto TileNeighbour : TileData.GetTileNeigbours(GridManager->GridTiles))
+	{
+		NeighbourTiles.Add(TileNeighbour);
+		GridManager->AddStateToTile(TileNeighbour, ETileStates::Neighbour);
+	}
 }
 
 void APlayerActions::ClickOnTile()
 {
-	UE_LOG(LogTemp, Error, TEXT("CLICK"));
-
 	if(!GridManager) return;
 	
 	FVector2D TileIndex = GridManager->GetTileIndexUnderCursor();
-
+	
 	if(SelectedTile == TileIndex) return;
 
 	GridManager->RemoveStateFromTile(SelectedTile, ETileStates::Selected);
 		
 	SelectedTile = TileIndex;
 	GridManager->AddStateToTile(SelectedTile, ETileStates::Selected);
+
+	StartNode = *GridManager->GridTiles.Find(TileIndex);
+}
+
+void APlayerActions::RClickOnTile()
+{
+	if(!GridManager) return;
+	
+	FVector2D TileIndex = GridManager->GetTileIndexUnderCursor();
+	
+	if(EndNode.Index == TileIndex) return;
+
+	GridManager->RemoveStateFromTile(EndNode.Index, ETileStates::Hovered);
+		
+	EndNode.Index = TileIndex;
+	GridManager->AddStateToTile(EndNode.Index, ETileStates::Hovered);
+
+	EndNode = *GridManager->GridTiles.Find(TileIndex);
+
+	if(GridManager->GridTiles.Contains(StartNode.Index) && GridManager->GridTiles.Contains(EndNode.Index))
+	{
+		for (auto Node : Path)
+		{
+			GridManager->RemoveStateFromTile(Node.Index, ETileStates::Neighbour);
+		}
+
+		Path = AStarPathfinding->AStarPathfinding(StartNode, EndNode);
+		
+		for (auto Node : Path)
+		{
+			GridManager->AddStateToTile(Node.Index, ETileStates::Neighbour);
+		}
+	}
 }
 

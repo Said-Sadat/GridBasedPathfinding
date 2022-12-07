@@ -61,7 +61,7 @@ void AGrid::AddInstance(FVector2D Index, FTransform InstanceTransform, TArray<TE
 
 	float fill;
 	
-	if(States.Contains(Selected) || States.Contains(Hovered))
+	if(States.Contains(Selected) || States.Contains(Hovered) || States.Contains(Neighbour))
 		fill = 1;
 	else
 		fill = 0;
@@ -106,7 +106,10 @@ FLinearColor AGrid::GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States)
 		return FLinearColor::Green;
 	
 	if(States.Contains(ETileStates::Hovered))
-		 return FLinearColor::Yellow;
+		 return FLinearColor::Red;
+
+	if(States.Contains(ETileStates::Neighbour))
+		return FLinearColor::Yellow;
 	
 	return  FLinearColor::Black;
 }
