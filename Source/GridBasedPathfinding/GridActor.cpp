@@ -30,7 +30,7 @@ void AGridActor::BeginPlay()
 void AGridActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 void AGridActor::UpdateGridActorOnGrid()
@@ -41,6 +41,7 @@ void AGridActor::UpdateGridActorOnGrid()
 		GridManager->GetGridTileSize());
 	
 	GridManager->AddStateToTile(TileIndex, ETileStates::Neighbour);
+	GridManager->AddOccupierToTile(TileIndex, this);
 }
 
 

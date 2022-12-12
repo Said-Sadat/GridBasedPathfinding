@@ -47,6 +47,9 @@ public:
 	void AddStateToTile(FVector2D Index, ETileStates TileState);
 
 	UFUNCTION(BlueprintCallable)
+	void AddOccupierToTile(FVector2D Index, AActor* Actor);
+
+	UFUNCTION(BlueprintCallable)
 	void RemoveStateFromTile(FVector2D Index, ETileStates TileState);
 
 	UFUNCTION(BlueprintCallable)

@@ -62,9 +62,6 @@ void AGridActions::BeginPlay()
 void AGridActions::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	FVector2D TileIndex = UGridUtilities::GetTileIndexUnderCursor(PlayerController, GridManager);
-	UE_LOG(LogTemp, Error, TEXT("X: %f Y: %f"), TileIndex.X, TileIndex.Y);
 	
 	UpdateTileCursor();
 }
@@ -105,6 +102,9 @@ void AGridActions::LClickOnTile()
 	GridManager->AddStateToTile(SelectedTile, ETileStates::Selected);
 
 	StartNode = *GridManager->GridTiles.Find(TileIndex);
+
+	if(StartNode.OccupyingActor != nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("Occupied Actor %s"), *StartNode.OccupyingActor->GetName());
 }
 
 void AGridActions::RClickOnTile()

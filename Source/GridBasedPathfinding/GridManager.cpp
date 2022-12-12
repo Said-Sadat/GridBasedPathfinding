@@ -71,6 +71,13 @@ void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
 	AddGridTile(TileData);
 }
 
+void AGridManager::AddOccupierToTile(FVector2D Index, AActor* Actor)
+{
+	FTileData TileData = *GridTiles.Find(Index);
+	TileData.OccupyingActor = Actor;
+	AddGridTile(TileData);
+}
+
 void AGridManager::RemoveStateFromTile(FVector2D Index, ETileStates TileState)
 {
 	if(!GridTiles.Find(Index)) return;
