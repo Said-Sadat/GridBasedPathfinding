@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "GridModifier.h"
+#include "Commons.h"
 #include "BFLUtilities.generated.h"
 
 /**

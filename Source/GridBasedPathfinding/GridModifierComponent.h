@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Commons.h"
 #include "Components/ActorComponent.h"
-#include "GridModifier.h"
 #include "GridModifierComponent.generated.h"
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRIDBASEDPATHFINDING_API UGridModifierComponent : public UActorComponent

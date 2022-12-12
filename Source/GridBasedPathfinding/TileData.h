@@ -1,17 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GridModifier.h"
+#include "Commons.h"
 #include "TileData.Generated.h"
 
-UENUM(BlueprintType)
-enum ETileStates
-{
-	NoState,
-	Hovered,
-	Selected,
-	Neighbour
-};
+
 
 USTRUCT(BlueprintType)
 struct FTileData

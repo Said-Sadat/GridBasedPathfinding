@@ -4,7 +4,7 @@
 #include "GridManager.h"
 #include "BFLUtilities.h"
 #include "GridActor.h"
-#include "GridModifier.h"
+#include "Commons.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
