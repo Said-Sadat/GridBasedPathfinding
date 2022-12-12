@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GridManager.h"
 #include "GridModifierComponent.h"
 #include "GameFramework/Actor.h"
 #include "GridActor.generated.h"
@@ -26,8 +27,13 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	AGridManager* GridManager;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void UpdateGridActorOnGrid();
 
 };

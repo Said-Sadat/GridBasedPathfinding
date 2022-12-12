@@ -19,7 +19,9 @@ AGridActor::AGridActor()
 void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(GridModifierComponent->TileType == ETileTypes::Occupied)
+		UpdateGridActorOnGrid();
 }
 
 // Called every frame
@@ -28,4 +30,11 @@ void AGridActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AGridActor::UpdateGridActorOnGrid()
+{
+	FVector2D TileIndex = GridManager->WorldPositionToGrid(GetActorLocation());
+	GridManager->AddStateToTile(TileIndex, ETileStates::Neighbour);
+}
+
 

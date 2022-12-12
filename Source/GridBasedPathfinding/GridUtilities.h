@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Commons.h"
-#include "BFLUtilities.generated.h"
+#include "TileData.h"
+#include "GridUtilities.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GRIDBASEDPATHFINDING_API UBFLUtilities : public UBlueprintFunctionLibrary
+class GRIDBASEDPATHFINDING_API UGridUtilities : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -24,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static bool IsTileWalkable(ETileTypes TileType);
+
+	UFUNCTION(BlueprintCallable)
+	static FVector2D WorldToGridPosition(FVector WorldPosition, FVector GridBottomLeft, FVector TileSize);
 };

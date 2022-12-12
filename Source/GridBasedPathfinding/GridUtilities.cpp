@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BFLUtilities.h"
+#include "GridUtilities.h"
 #include "Kismet/KismetMathLibrary.h"
 
-FVector UBFLUtilities::SnapVectors(FVector v1, FVector v2)
+FVector UGridUtilities::SnapVectors(FVector v1, FVector v2)
 {
 	FVector SnappedVector;
 	SnappedVector.X = UKismetMathLibrary::GridSnap_Float(v1.X, v2.X);
@@ -14,7 +14,7 @@ FVector UBFLUtilities::SnapVectors(FVector v1, FVector v2)
 	return SnappedVector;
 }
 
-bool UBFLUtilities::IsFloatEven(float testfloat)
+bool UGridUtilities::IsFloatEven(float testfloat)
 {
 	double result;
 	UKismetMathLibrary::FMod64(testfloat, 2.0f, result);
@@ -25,17 +25,25 @@ bool UBFLUtilities::IsFloatEven(float testfloat)
 	return  false;
 }
 
-bool UBFLUtilities::IsTileWalkable(ETileTypes TileType)
+bool UGridUtilities::IsTileWalkable(ETileTypes TileType)
 {
 	switch (TileType)
 	{
 	case None:
 		return false;
-	case Normal:
-		return true;
 	case Obstacle:
 		return false;
 	default:
-		return false;
+		return true;
 	}
+}
+
+FVector2D UGridUtilities::WorldToGridPosition(FVector WorldPosition, FVector GridBottomLeft, FVector TileSize)
+{
+	FVector LocationOnGrid;
+	LocationOnGrid = WorldPosition - GridBottomLeft;
+	LocationOnGrid = UGridUtilities::SnapVectors(LocationOnGrid, TileSize);
+	LocationOnGrid /= TileSize;
+	
+	return FVector2D(LocationOnGrid);
 }

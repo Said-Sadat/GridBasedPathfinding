@@ -2,15 +2,12 @@
 
 
 #include "GridManager.h"
-#include "BFLUtilities.h"
+#include "GridUtilities.h"
 #include "GridActor.h"
 #include "Commons.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-
-#define Ground ECC_GameTraceChannel1
-#define Grid ECC_GameTraceChannel2
 
 // Sets default values
 AGridManager::AGridManager()
@@ -80,7 +77,7 @@ FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
 {
 	FVector LocationOnGrid;
 	LocationOnGrid = WorldPosition - GridBottomLeftCornerLocation;
-	LocationOnGrid = UBFLUtilities::SnapVectors(LocationOnGrid, GridTileSize);
+	LocationOnGrid = UGridUtilities::SnapVectors(LocationOnGrid, GridTileSize);
 	LocationOnGrid /= GridTileSize;
 	
 	return FVector2D(LocationOnGrid);
@@ -143,7 +140,7 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 		AGridActor* GridActor = Cast<AGridActor>(OutHit.GetActor());
 		
 		if(GridActor)
-			if(!UBFLUtilities::IsTileWalkable(GridActor->GridModifierComponent->TileType))
+			if(!UGridUtilities::IsTileWalkable(GridActor->GridModifierComponent->TileType))
 				return;
 		
 		FVector TileLocation = TileTransform.GetLocation();

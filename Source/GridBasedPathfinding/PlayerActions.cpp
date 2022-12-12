@@ -127,4 +127,3 @@ void APlayerActions::RClickOnTile()
 
 	FindPath(StartNode, EndNode);
 }
-

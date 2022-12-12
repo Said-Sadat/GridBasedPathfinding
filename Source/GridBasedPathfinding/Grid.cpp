@@ -3,7 +3,7 @@
 
 #include "Grid.h"
 
-#include "BFLUtilities.h"
+#include "GridUtilities.h"
 #include "Components/InstancedStaticMeshComponent.h"
 
 // Sets default values
@@ -87,7 +87,7 @@ void AGrid::UpdateGrid(FTileData TileData)
 {
 	RemoveInstance(TileData.Index);
 	
-	if(!UBFLUtilities::IsTileWalkable(TileData.TileType))
+	if(!UGridUtilities::IsTileWalkable(TileData.TileType))
 	{
 		UE_LOG(LogTemp, Error, TEXT("RETURN"));
 		return;
@@ -118,10 +118,10 @@ FVector AGrid::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector Til
 {
 	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);
 
-	if(!UBFLUtilities::IsFloatEven(TileCount.X))
+	if(!UGridUtilities::IsFloatEven(TileCount.X))
 		GridTileCount3D.X -= 1;
 	
-	if(!UBFLUtilities::IsFloatEven(TileCount.Y))
+	if(!UGridUtilities::IsFloatEven(TileCount.Y))
 		GridTileCount3D.Y -= 1;
 	
 	return CenterLocation - TileSize * (GridTileCount3D / 2);
