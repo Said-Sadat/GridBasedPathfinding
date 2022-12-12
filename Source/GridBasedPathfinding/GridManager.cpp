@@ -3,6 +3,7 @@
 
 #include "GridManager.h"
 #include "BFLUtilities.h"
+#include "GridActor.h"
 #include "GridModifier.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -139,12 +140,12 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 
 	for(auto OutHit : OutHits)
 	{
-		AGridModifier* GridModifier = Cast<AGridModifier>(OutHit.GetActor());
+		AGridActor* GridActor = Cast<AGridActor>(OutHit.GetActor());
 		
-		if(GridModifier)
-			if(!UBFLUtilities::IsTileWalkable(GridModifier->TileType))
+		if(GridActor)
+			if(!UBFLUtilities::IsTileWalkable(GridActor->GridModifierComponent->TileType))
 				return;
-
+		
 		FVector TileLocation = TileTransform.GetLocation();
 		TileLocation.Z = OutHit.Location.Z - TileSize.X/3;
 		TileTransform.SetLocation(TileLocation);

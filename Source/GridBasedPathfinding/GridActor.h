@@ -3,29 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GridModifierComponent.h"
 #include "GameFramework/Actor.h"
-#include "GridModifier.generated.h"
-
-UENUM(BlueprintType)
-enum ETileTypes
-{
-	None,
-	Normal,
-	Obstacle,
-	Occupied
-};
+#include "GridActor.generated.h"
 
 UCLASS()
-class GRIDBASEDPATHFINDING_API AGridModifier : public AActor
+class GRIDBASEDPATHFINDING_API AGridActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AGridModifier();
+	AGridActor();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Tile")
-	TEnumAsByte<ETileTypes> TileType;
+	UPROPERTY(VisibleAnywhere)
+	UGridModifierComponent* GridModifierComponent;
 
 protected:
 	// Called when the game starts or when spawned
