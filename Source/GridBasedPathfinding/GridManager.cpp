@@ -55,45 +55,6 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 	}
 }
 
-FVector AGridManager::GetCursorLocationOnGrid(APlayerController* PlayerController)
-{
-	FHitResult HitResult;
-	
-	if(!PlayerController)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
-		return FVector(0,0,0);
-	}
-	
-	PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(Grid), false, HitResult);
-
-	if(HitResult.GetActor())
-		return HitResult.Location;
-
-	return FVector(1000,1000,1000);
-}
-
-FVector2D AGridManager::WorldPositionToGrid(FVector WorldPosition)
-{
-	FVector LocationOnGrid;
-	LocationOnGrid = WorldPosition - GridBottomLeftCornerLocation;
-	LocationOnGrid = UGridUtilities::SnapVectors(LocationOnGrid, GridTileSize);
-	LocationOnGrid /= GridTileSize;
-	
-	return FVector2D(LocationOnGrid);
-}
-
-FVector2D AGridManager::GetTileIndexUnderCursor()
-{
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if(!PlayerController)
-	{
-		UE_LOG(LogTemp, Error, TEXT("NO PLAYER CONTROLLER"));
-		return FVector2D(0,0);
-	}
-	return WorldPositionToGrid(GetCursorLocationOnGrid(PlayerController));
-}
-
 void AGridManager::AddGridTile(FTileData TileData)
 {
 	GridTiles.Add(TileData.Index, TileData);

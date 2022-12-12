@@ -66,4 +66,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FLinearColor GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetGridBottomLeftLocation();
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetGridTileSize();
 };

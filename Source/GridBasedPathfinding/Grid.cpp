@@ -114,6 +114,16 @@ FLinearColor AGrid::GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States)
 	return  FLinearColor::Black;
 }
 
+FVector AGrid::GetGridBottomLeftLocation()
+{
+	return GridBottomLeftCornerLocation;
+}
+
+FVector AGrid::GetGridTileSize()
+{
+	return GridTileSize;
+}
+
 FVector AGrid::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);

@@ -47,3 +47,24 @@ FVector2D UGridUtilities::WorldToGridPosition(FVector WorldPosition, FVector Gri
 	
 	return FVector2D(LocationOnGrid);
 }
+
+FVector2D UGridUtilities::GetTileIndexUnderCursor(APlayerController* PlayerController, AGridManager* GridManager)
+{
+	FHitResult HitResult;
+	
+	if(!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
+		return FVector2D(-1,-1);
+	}
+	
+	PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(Grid), false, HitResult);
+
+	if(HitResult.GetActor())
+		return WorldToGridPosition(
+			HitResult.Location,
+			GridManager->GetGridBottomLeftLocation(),
+			GridManager->GetGridTileSize());
+
+	return FVector2D(-1,-1);
+}

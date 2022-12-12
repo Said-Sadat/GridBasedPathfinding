@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Commons.h"
+#include "GridManager.h"
 #include "TileData.h"
 #include "GridUtilities.generated.h"
 
@@ -28,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static FVector2D WorldToGridPosition(FVector WorldPosition, FVector GridBottomLeft, FVector TileSize);
+
+	UFUNCTION(BlueprintCallable)
+	static FVector2D GetTileIndexUnderCursor(APlayerController* PlayerController, AGridManager* GridManager);
 };

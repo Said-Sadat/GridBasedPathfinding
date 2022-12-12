@@ -7,10 +7,10 @@
 #include "GridManager.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
-#include "PlayerActions.generated.h"
+#include "GridActions.generated.h"
 
 UCLASS()
-class GRIDBASEDPATHFINDING_API APlayerActions : public AActor
+class GRIDBASEDPATHFINDING_API AGridActions : public AActor
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,7 @@ class GRIDBASEDPATHFINDING_API APlayerActions : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	APlayerActions();
+	AGridActions();
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,10 +42,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
 	void UpdateTileCursor();
 
-	void ClickOnTile();
+	void LClickOnTile();
 
 	void RClickOnTile();
 

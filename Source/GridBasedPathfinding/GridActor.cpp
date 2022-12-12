@@ -3,6 +3,8 @@
 
 #include "GridActor.h"
 
+#include "GridUtilities.h"
+
 // Sets default values
 AGridActor::AGridActor()
 {
@@ -33,7 +35,11 @@ void AGridActor::Tick(float DeltaTime)
 
 void AGridActor::UpdateGridActorOnGrid()
 {
-	FVector2D TileIndex = GridManager->WorldPositionToGrid(GetActorLocation());
+	FVector2D TileIndex = UGridUtilities::WorldToGridPosition(
+		GetActorLocation(),
+		GridManager->GetGridBottomLeftLocation(),
+		GridManager->GetGridTileSize());
+	
 	GridManager->AddStateToTile(TileIndex, ETileStates::Neighbour);
 }
 
