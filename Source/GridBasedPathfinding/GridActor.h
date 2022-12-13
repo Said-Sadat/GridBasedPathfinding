@@ -10,12 +10,20 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FRequestMovement, class AGridActor*, Actor, FVector2D, Destination, TArray<FTileData>&, OutPath, bool&, Successful);
 
+
 UCLASS()
 class GRIDBASEDPATHFINDING_API AGridActor : public AActor
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Grid", meta=(AllowPrivateAccess = true))
 	FVector2D LocationOnGrid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid", meta=(AllowPrivateAccess = true))
+	int Range;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Grid", meta=(AllowPrivateAccess = true))
+	TArray<FVector2D> TilesInRange;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -33,7 +41,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	AGridManager* GridManager;
 
 public:	
@@ -48,4 +56,6 @@ public:
 	UFUNCTION()
 	FVector2D GetLocationOnGrid();
 
+	UFUNCTION()
+	void SetTilesInRange(FVector2D Index);
 };

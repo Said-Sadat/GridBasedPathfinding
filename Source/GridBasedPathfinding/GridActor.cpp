@@ -27,7 +27,7 @@ void AGridActor::BeginPlay()
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), AGridManager::StaticClass());
 
 	GridManager = Cast<AGridManager>(FoundActor);
-	
+
 	UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent->BindAction(
 		"LMB",
 		EInputEvent::IE_Pressed,
@@ -47,19 +47,26 @@ void AGridActor::UpdateGridActorOnGrid()
 		UGameplayStatics::GetPlayerController(GetWorld(), 0),
 		GridManager);
 
+	if(!GridManager->GridTiles.Contains(Index)) return;
+
+	FTileData Tile = *GridManager->GridTiles.Find(Index);
+	if(Tile.OccupyingActor == this)
+	{
+		SetTilesInRange(Index);
+		return;
+	}
+
+	if(TilesInRange.IsEmpty()) return;
+	if(!TilesInRange.Contains(Index)) return;
+	
 	bool success;
 	TArray<FTileData> OutPath;
 	
 	if(RequestMovement.IsBound())
 		RequestMovement.Broadcast(this, Index, OutPath, success);
-
-	UE_LOG(LogTemp,Warning,TEXT("BOG"));
 	
 	if(success)
-	{
-		FTileData Tile = *GridManager->GridTiles.Find(Index);
 		SetActorLocation(Tile.Transform.GetLocation());
-	}
 }
 
 void AGridActor::SetLocationOnGrid(FVector2D Index)
@@ -72,4 +79,16 @@ FVector2D AGridActor::GetLocationOnGrid()
 	return LocationOnGrid;
 }
 
+void AGridActor::SetTilesInRange(FVector2D Index)
+{
+	for (auto tile : TilesInRange)
+		GridManager->RemoveStateFromTile(tile, ETileStates::Available);
+
+	TilesInRange.Empty();
+
+	TilesInRange = GridManager->GetTilesInRange(Index, Range);
+
+	for (auto tile : TilesInRange)
+		GridManager->AddStateToTile(tile, ETileStates::Available);
+}
 
