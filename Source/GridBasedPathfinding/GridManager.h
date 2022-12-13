@@ -14,8 +14,8 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AGrid
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
 	UAStarPathfinding* AStarPathfinding;
+	TArray<FTileData> Path;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -67,6 +67,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AssignGridActorsToTiles();
+
+	UFUNCTION(BlueprintCallable)
+	void CalculatePath(FTileData StartNode, FTileData EndNode);
 
 	UFUNCTION()
 	void MoveGridActorToTileLocation(class AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success);

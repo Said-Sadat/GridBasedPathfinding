@@ -58,4 +58,7 @@ public:
 
 	UFUNCTION()
 	void SetTilesInRange(FVector2D Index);
+
+	UFUNCTION()
+	void ClearTilesInRange();
 };

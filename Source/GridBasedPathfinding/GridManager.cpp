@@ -15,13 +15,15 @@ AGridManager::AGridManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AStarPathfinding = NewObject<UAStarPathfinding>();
 }
 
 // Called when the game starts or when spawned
 void AGridManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AStarPathfinding = NewObject<UAStarPathfinding>();
+	
 	AssignGridActorsToTiles();
 }
 
@@ -181,6 +183,20 @@ void AGridManager::AssignGridActorsToTiles()
 
 		GridActor->RequestMovement.AddDynamic(this, &AGridManager::MoveGridActorToTileLocation);
 	}
+}
+
+void AGridManager::CalculatePath(FTileData StartNode, FTileData EndNode)
+{
+	if(!GridTiles.Contains(StartNode.Index) || !GridTiles.Contains(EndNode.Index)) return;
+
+	for(auto Node : Path)
+		RemoveStateFromTile(Node.Index, ETileStates::Neighbour);
+
+	Path.Empty();
+	Path = AStarPathfinding->AStarPathfinding(StartNode, EndNode, GridTiles);
+
+	for(auto Node : Path)
+		AddStateToTile(Node.Index, ETileStates::Neighbour);
 }
 
 void AGridManager::MoveGridActorToTileLocation(AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success)

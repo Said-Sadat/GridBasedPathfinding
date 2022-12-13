@@ -59,6 +59,8 @@ void AGridActor::UpdateGridActorOnGrid()
 	if(TilesInRange.IsEmpty()) return;
 	if(!TilesInRange.Contains(Index)) return;
 	
+	GridManager->CalculatePath(*GridManager->GridTiles.Find(LocationOnGrid), Tile);
+	
 	bool success;
 	TArray<FTileData> OutPath;
 	
@@ -67,6 +69,9 @@ void AGridActor::UpdateGridActorOnGrid()
 	
 	if(success)
 		SetActorLocation(Tile.Transform.GetLocation());
+
+	
+	ClearTilesInRange();
 }
 
 void AGridActor::SetLocationOnGrid(FVector2D Index)
@@ -90,5 +95,13 @@ void AGridActor::SetTilesInRange(FVector2D Index)
 
 	for (auto tile : TilesInRange)
 		GridManager->AddStateToTile(tile, ETileStates::Available);
+}
+
+void AGridActor::ClearTilesInRange()
+{
+	for (auto tile : TilesInRange)
+		GridManager->RemoveStateFromTile(tile, ETileStates::Available);
+
+	TilesInRange.Empty();
 }
 
