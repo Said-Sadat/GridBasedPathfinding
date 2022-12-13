@@ -15,19 +15,8 @@ class GRIDBASEDPATHFINDING_API AGridActions : public AActor
 	GENERATED_BODY()
 
 	FVector2D HoveredTile;
-	FVector2D SelectedTile;
-	TArray<FVector2D> NeighbourTiles;
-
-	TArray<FVector2D> AvailableTiles;
-
-	FTileData StartNode;
-	FTileData EndNode;
-	TArray<FTileData> Path;
 
 	APlayerController* PlayerController;
-	UAStarPathfinding* AStarPathfinding;
-
-	void FindPath(FTileData s, FTileData n);
 	
 public:	
 	// Sets default values for this actor's properties
@@ -45,9 +34,4 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void UpdateTileCursor();
-
-	void LClickOnTile();
-
-	void RClickOnTile();
-
 };
