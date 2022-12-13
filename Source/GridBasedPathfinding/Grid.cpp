@@ -60,8 +60,9 @@ void AGrid::AddInstance(FVector2D Index, FTransform InstanceTransform, TArray<TE
 	InstancedStaticMesh->SetCustomDataValue(InstanceIndex.Find(Index), 2, Color.B);
 
 	float fill;
-	
-	if(States.Contains(Selected) || States.Contains(Hovered) || States.Contains(Neighbour))
+
+	//Default state is None therefore if there is more than one state it means it should be filled.
+	if(States.Max() > 0)
 		fill = 1;
 	else
 		fill = 0;
@@ -103,13 +104,16 @@ FLinearColor AGrid::GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States)
 		return FLinearColor::Black;
 
 	if(States.Contains(ETileStates::Selected))
-		return FLinearColor::Green;
+		return StateColour[Selected];
 	
 	if(States.Contains(ETileStates::Hovered))
-		 return FLinearColor::Red;
+		 return StateColour[Hovered];
 
 	if(States.Contains(ETileStates::Neighbour))
-		return FLinearColor::Yellow;
+		return StateColour[Neighbour];
+
+	if(States.Contains(ETileStates::Available))
+		return StateColour[Available];
 	
 	return  FLinearColor::Black;
 }

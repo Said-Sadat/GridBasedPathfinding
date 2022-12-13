@@ -20,10 +20,10 @@ public:
 	TArray<FVector2D> InstanceIndex;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	UPROPERTY(BlueprintReadWrite, Category= "Grid")
 	FVector GridCenterLocation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
+	UPROPERTY(BlueprintReadWrite, Category= "Grid")
 	FVector GridBottomLeftCornerLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
@@ -34,6 +34,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	float GridOffset;
+
+	UPROPERTY(EditAnywhere, Category= "Grid")
+	TMap<TEnumAsByte<ETileStates>, FLinearColor> StateColour;
 	
 	UPROPERTY(VisibleAnywhere)
 	UInstancedStaticMeshComponent* InstancedStaticMesh;

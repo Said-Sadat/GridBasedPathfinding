@@ -18,6 +18,8 @@ class GRIDBASEDPATHFINDING_API AGridActions : public AActor
 	FVector2D SelectedTile;
 	TArray<FVector2D> NeighbourTiles;
 
+	TArray<FVector2D> AvailableTiles;
+
 	FTileData StartNode;
 	FTileData EndNode;
 	TArray<FTileData> Path;

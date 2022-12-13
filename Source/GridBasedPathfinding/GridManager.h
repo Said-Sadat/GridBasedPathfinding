@@ -54,7 +54,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FVector2D> GetTilesInRange(FVector2D StartingIndex, int Range);
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
 };

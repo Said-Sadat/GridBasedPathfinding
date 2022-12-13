@@ -12,17 +12,13 @@ void AGridActions::FindPath(FTileData s, FTileData n)
 	if(GridManager->GridTiles.Contains(s.Index) && GridManager->GridTiles.Contains(n.Index))
 	{
 		for (auto Node : Path)
-		{
 			GridManager->RemoveStateFromTile(Node.Index, ETileStates::Neighbour);
-		}
 		
 		Path.Empty();
 		Path = AStarPathfinding->AStarPathfinding(s, n, GridManager->GridTiles);
 		
 		for (auto Node : Path)
-		{
 			GridManager->AddStateToTile(Node.Index, ETileStates::Neighbour);
-		}
 	}
 }
 
@@ -106,10 +102,16 @@ void AGridActions::LClickOnTile()
 	if(StartNode.OccupyingActor != nullptr)
 		UE_LOG(LogTemp, Warning, TEXT("Occupied Actor %s"), *StartNode.OccupyingActor->GetName());
 
-	for (auto Index : GridManager->GetTilesInRange(StartNode.Index, 2))
-	{
-		GridManager->AddStateToTile(Index, ETileStates::Neighbour);
-	}
+
+	for (auto Index : AvailableTiles)
+		GridManager->RemoveStateFromTile(Index, ETileStates::Available);
+
+	AvailableTiles.Empty();
+	
+	AvailableTiles = GridManager->GetTilesInRange(StartNode.Index, 2);
+	
+	for (auto Index : AvailableTiles)
+		GridManager->AddStateToTile(Index, ETileStates::Available);
 }
 
 void AGridActions::RClickOnTile()
