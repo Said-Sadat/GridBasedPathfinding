@@ -14,12 +14,15 @@ AGridManager::AGridManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	AStarPathfinding = NewObject<UAStarPathfinding>();
 }
 
 // Called when the game starts or when spawned
 void AGridManager::BeginPlay()
 {
 	Super::BeginPlay();
+	AssignGridActorsToTiles();
 }
 
 // Called every frame
@@ -63,7 +66,7 @@ void AGridManager::AddGridTile(FTileData TileData)
 
 void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
 {
-	if(!GridTiles.Find(Index)) return;
+	if(!GridTiles.Contains(Index)) return;
 
 	FTileData TileData = *GridTiles.Find(Index);
 	TileData.TileStates.AddUnique(TileState);
@@ -73,8 +76,21 @@ void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
 
 void AGridManager::AddOccupierToTile(FVector2D Index, AActor* Actor)
 {
+	if(!GridTiles.Contains(Index)) return;
+	
 	FTileData TileData = *GridTiles.Find(Index);
 	TileData.OccupyingActor = Actor;
+	TileData.TileStates.AddUnique(ETileStates::Available);
+	AddGridTile(TileData);
+}
+
+void AGridManager::RemoveOccupierFromTile(FVector2D Index, AActor* Actor)
+{
+	if(!GridTiles.Contains(Index)) return;
+
+	FTileData TileData = *GridTiles.Find(Index);
+	TileData.OccupyingActor = nullptr;
+	TileData.TileStates.Remove(ETileStates::Available);
 	AddGridTile(TileData);
 }
 
@@ -142,4 +158,55 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 		FTileData TileData = FTileData(TileIndex, ETileTypes::Normal, TileTransform);
 		AddGridTile(TileData);
 	}
+}
+
+void AGridManager::AssignGridActorsToTiles()
+{
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridActor::StaticClass(), OutActors);
+
+	for(auto Actor : OutActors)
+	{
+		AGridActor* GridActor = Cast<AGridActor>(Actor);
+
+		FVector2D TileIndex = UGridUtilities::WorldToGridPosition(
+			Actor->GetActorLocation(),
+			GridBottomLeftCornerLocation,
+			GridTileSize);
+
+		GridActor->SetLocationOnGrid(TileIndex);
+		
+		AddStateToTile(TileIndex, ETileStates::Available);
+		AddOccupierToTile(TileIndex, Actor);
+
+		GridActor->RequestMovement.AddDynamic(this, &AGridManager::MoveGridActorToTileLocation);
+	}
+}
+
+void AGridManager::MoveGridActorToTileLocation(AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success)
+{
+	FVector2D GridActorLocation = GridActor->GetLocationOnGrid();
+
+	if(!GridTiles.Contains(GridActorLocation) || !GridTiles.Contains(TileIndex))
+	{
+		Success = false;
+		return;
+	}
+
+	RemoveOccupierFromTile(GridActor->GetLocationOnGrid(), GridActor);
+
+	GridActor->SetLocationOnGrid(TileIndex);
+	AddOccupierToTile(TileIndex, GridActor);
+
+	Success = true;
+}
+
+FVector AGridManager::GridToWorldPosition(FVector2D Index)
+{
+	FVector WorldPos = FVector(Index.X, Index.Y, 0);
+
+	WorldPos *= GridTileSize;
+	WorldPos += GridBottomLeftCornerLocation;
+
+	return WorldPos;
 }

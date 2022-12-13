@@ -50,7 +50,7 @@ void AGridActions::BeginPlay()
 
 	AStarPathfinding = NewObject<UAStarPathfinding>();
 
-	PlayerController->InputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &AGridActions::LClickOnTile);
+	//PlayerController->InputComponent->BindAction("LMB", EInputEvent::IE_Pressed, this, &AGridActions::LClickOnTile);
 	PlayerController->InputComponent->BindAction("RMB", EInputEvent::IE_Pressed, this, &AGridActions::RClickOnTile);
 }
 

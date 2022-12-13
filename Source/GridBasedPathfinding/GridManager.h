@@ -6,12 +6,16 @@
 #include "Grid.h"
 #include "GridShapesStruct.h"
 #include "TileData.h"
+#include "AStarPathfinding.h"
 #include "GridManager.generated.h"
 
 UCLASS()
 class GRIDBASEDPATHFINDING_API AGridManager : public AGrid
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	UAStarPathfinding* AStarPathfinding;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -50,6 +54,9 @@ public:
 	void AddOccupierToTile(FVector2D Index, AActor* Actor);
 
 	UFUNCTION(BlueprintCallable)
+	void RemoveOccupierFromTile(FVector2D Index, AActor* Actor);
+
+	UFUNCTION(BlueprintCallable)
 	void RemoveStateFromTile(FVector2D Index, ETileStates TileState);
 
 	UFUNCTION(BlueprintCallable)
@@ -57,4 +64,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void AssignGridActorsToTiles();
+
+	UFUNCTION()
+	void MoveGridActorToTileLocation(class AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GridToWorldPosition(FVector2D Index);
 };

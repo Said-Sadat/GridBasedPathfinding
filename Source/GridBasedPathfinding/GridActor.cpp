@@ -3,7 +3,9 @@
 
 #include "GridActor.h"
 
+#include "GridManager.h"
 #include "GridUtilities.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGridActor::AGridActor()
@@ -22,26 +24,52 @@ void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(GridModifierComponent->TileType == ETileTypes::Occupied)
-		UpdateGridActorOnGrid();
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), AGridManager::StaticClass());
+
+	GridManager = Cast<AGridManager>(FoundActor);
+	
+	UGameplayStatics::GetPlayerController(GetWorld(),0)->InputComponent->BindAction(
+		"LMB",
+		EInputEvent::IE_Pressed,
+		this,
+		&AGridActor::UpdateGridActorOnGrid);
 }
 
 // Called every frame
 void AGridActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 }
 
 void AGridActor::UpdateGridActorOnGrid()
 {
-	FVector2D TileIndex = UGridUtilities::WorldToGridPosition(
-		GetActorLocation(),
-		GridManager->GetGridBottomLeftLocation(),
-		GridManager->GetGridTileSize());
+	FVector2D Index = UGridUtilities::GetTileIndexUnderCursor(
+		UGameplayStatics::GetPlayerController(GetWorld(), 0),
+		GridManager);
+
+	bool success;
+	TArray<FTileData> OutPath;
 	
-	GridManager->AddStateToTile(TileIndex, ETileStates::Neighbour);
-	GridManager->AddOccupierToTile(TileIndex, this);
+	if(RequestMovement.IsBound())
+		RequestMovement.Broadcast(this, Index, OutPath, success);
+
+	UE_LOG(LogTemp,Warning,TEXT("BOG"));
+	
+	if(success)
+	{
+		FTileData Tile = *GridManager->GridTiles.Find(Index);
+		SetActorLocation(Tile.Transform.GetLocation());
+	}
+}
+
+void AGridActor::SetLocationOnGrid(FVector2D Index)
+{
+	LocationOnGrid = Index;
+}
+
+FVector2D AGridActor::GetLocationOnGrid()
+{
+	return LocationOnGrid;
 }
 
 

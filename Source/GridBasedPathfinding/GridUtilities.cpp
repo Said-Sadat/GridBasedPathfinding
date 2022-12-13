@@ -52,11 +52,12 @@ FVector2D UGridUtilities::GetTileIndexUnderCursor(APlayerController* PlayerContr
 {
 	FHitResult HitResult;
 	
-	if(!PlayerController)
+	if(!PlayerController || !GridManager)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController or Gridmanager is null"));
 		return FVector2D(-1,-1);
 	}
+
 	
 	PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(Grid), false, HitResult);
 
