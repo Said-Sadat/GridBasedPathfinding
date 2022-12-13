@@ -53,5 +53,8 @@ public:
 	void RemoveStateFromTile(FVector2D Index, ETileStates TileState);
 
 	UFUNCTION(BlueprintCallable)
+	TArray<FVector2D> GetTilesInRange(FVector2D StartingIndex, int Range);
+
+	UFUNCTION(BlueprintCallable)
 	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
 };

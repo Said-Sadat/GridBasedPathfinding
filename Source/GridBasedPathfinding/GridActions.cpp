@@ -105,6 +105,11 @@ void AGridActions::LClickOnTile()
 
 	if(StartNode.OccupyingActor != nullptr)
 		UE_LOG(LogTemp, Warning, TEXT("Occupied Actor %s"), *StartNode.OccupyingActor->GetName());
+
+	for (auto Index : GridManager->GetTilesInRange(StartNode.Index, 2))
+	{
+		GridManager->AddStateToTile(Index, ETileStates::Neighbour);
+	}
 }
 
 void AGridActions::RClickOnTile()

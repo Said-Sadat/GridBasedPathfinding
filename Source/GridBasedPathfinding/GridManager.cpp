@@ -88,6 +88,30 @@ void AGridManager::RemoveStateFromTile(FVector2D Index, ETileStates TileState)
 	AddGridTile(TileData);
 }
 
+TArray<FVector2D> AGridManager::GetTilesInRange(FVector2D StartingIndex, int Range)
+{
+	TArray<FVector2D> InRangeTiles;
+	int StepCount = 0;
+
+	InRangeTiles.Add(StartingIndex);
+	
+	while (StepCount < Range)
+	{
+		TArray<FVector2D> SurroundingTiles;
+
+		for (auto Tile : InRangeTiles)
+			for (auto NeighbourTile : GridTiles[Tile].GetTileNeigbours(GridTiles))
+				SurroundingTiles.Add(NeighbourTile);
+
+		for (auto SurroundingTile : SurroundingTiles)
+			InRangeTiles.AddUnique(SurroundingTile);
+
+		StepCount++;
+	}
+	
+	return InRangeTiles;
+}
+
 void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex)
 {
 	TArray<FHitResult> OutHits;
