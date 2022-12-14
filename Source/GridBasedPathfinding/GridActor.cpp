@@ -59,8 +59,6 @@ void AGridActor::UpdateGridActorOnGrid()
 	if(TilesInRange.IsEmpty()) return;
 	if(!TilesInRange.Contains(Index)) return;
 	
-	GridManager->CalculatePath(*GridManager->GridTiles.Find(LocationOnGrid), Tile);
-	
 	TArray<FTileData> OutPath;
 
 	if(GridActorPath.IsBound())
