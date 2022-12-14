@@ -72,8 +72,5 @@ public:
 	void CalculatePath(FTileData StartNode, FTileData EndNode);
 	
 	UFUNCTION()
-	void MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList);
-	
-	UFUNCTION(BlueprintCallable)
-	FVector GridToWorldPosition(FVector2D Index);
+	void GridActorPathToLocation(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList);
 };

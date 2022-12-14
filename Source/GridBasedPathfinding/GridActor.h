@@ -21,8 +21,19 @@ class GRIDBASEDPATHFINDING_API AGridActor : public AActor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid", meta=(AllowPrivateAccess = true))
 	int Range;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid", meta=(AllowPrivateAccess = true))
+	float TimeOnTile;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Grid", meta=(AllowPrivateAccess = true))
 	TArray<FVector2D> TilesInRange;
+
+	UPROPERTY()
+	FTimerHandle TimerHandle;
+
+	TArray<FTileData> OutPath;
+
+
+	void MoveAlongPath();
 	
 public:	
 	// Sets default values for this actor's properties

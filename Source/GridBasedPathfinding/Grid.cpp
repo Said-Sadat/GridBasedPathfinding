@@ -103,17 +103,17 @@ FLinearColor AGrid::GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States)
 	if(States.IsEmpty())
 		return FLinearColor::Black;
 
+	if(States.Contains(ETileStates::Hovered))
+		 return StateColour[Hovered];
+	
+	if(States.Contains(ETileStates::Available))
+		return StateColour[Available];
+	
 	if(States.Contains(ETileStates::Selected))
 		return StateColour[Selected];
 	
-	if(States.Contains(ETileStates::Hovered))
-		 return StateColour[Hovered];
-
 	if(States.Contains(ETileStates::Neighbour))
 		return StateColour[Neighbour];
-
-	if(States.Contains(ETileStates::Available))
-		return StateColour[Available];
 	
 	return  FLinearColor::Black;
 }

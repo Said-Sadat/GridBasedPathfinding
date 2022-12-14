@@ -7,6 +7,27 @@
 #include "GridUtilities.h"
 #include "Kismet/GameplayStatics.h"
 
+void AGridActor::MoveAlongPath()
+{
+	if(!OutPath.IsValidIndex(1))
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle);
+		return;
+	}
+	
+	GridManager->RemoveOccupierFromTile(LocationOnGrid, this);
+
+	FTileData TileToOccupy = OutPath[1];
+	
+	GridManager->AddOccupierToTile(TileToOccupy.Index, this);
+
+	SetActorLocation(TileToOccupy.Transform.GetLocation());
+
+	LocationOnGrid = TileToOccupy.Index;
+	
+	OutPath.Remove(TileToOccupy);
+}
+
 // Sets default values
 AGridActor::AGridActor()
 {
@@ -33,6 +54,7 @@ void AGridActor::BeginPlay()
 		EInputEvent::IE_Pressed,
 		this,
 		&AGridActor::UpdateGridActorOnGrid);
+
 }
 
 // Called every frame
@@ -43,6 +65,8 @@ void AGridActor::Tick(float DeltaTime)
 
 void AGridActor::UpdateGridActorOnGrid()
 {
+	OutPath.Empty();
+	
 	FVector2D Index = UGridUtilities::GetTileIndexUnderCursor(
 		UGameplayStatics::GetPlayerController(GetWorld(), 0),
 		GridManager);
@@ -59,13 +83,12 @@ void AGridActor::UpdateGridActorOnGrid()
 	if(TilesInRange.IsEmpty()) return;
 	if(!TilesInRange.Contains(Index)) return;
 	
-	TArray<FTileData> OutPath;
-
 	if(GridActorPath.IsBound())
 		GridActorPath.Broadcast(LocationOnGrid, Index, OutPath);
 
-	if(OutPath.Max() > 0)
-		UE_LOG(LogTemp, Warning, TEXT("GSAFSAF|ADFAE"));
+	if(OutPath.Max() == 0) return;
+	
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGridActor::MoveAlongPath, TimeOnTile, true);
 	
 	ClearTilesInRange();
 }
@@ -100,4 +123,3 @@ void AGridActor::ClearTilesInRange()
 
 	TilesInRange.Empty();
 }
-

@@ -181,7 +181,7 @@ void AGridManager::AssignGridActorsToTiles()
 		AddStateToTile(TileIndex, ETileStates::Available);
 		AddOccupierToTile(TileIndex, Actor);
 
-		GridActor->GridActorPath.AddDynamic(this, &AGridManager::MoveGridAlongPath);
+		GridActor->GridActorPath.AddDynamic(this, &AGridManager::GridActorPathToLocation);
 	}
 }
 
@@ -199,7 +199,7 @@ void AGridManager::CalculatePath(FTileData StartNode, FTileData EndNode)
 		AddStateToTile(Node.Index, ETileStates::Neighbour);
 }
 
-void AGridManager::MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList)
+void AGridManager::GridActorPathToLocation(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList)
 {
 	FTileData StartNode;
 	FTileData EndNode;
@@ -212,14 +212,4 @@ void AGridManager::MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, T
 	CalculatePath(StartNode, EndNode);
 
 	OutList = Path;
-}
-
-FVector AGridManager::GridToWorldPosition(FVector2D Index)
-{
-	FVector WorldPos = FVector(Index.X, Index.Y, 0);
-
-	WorldPos *= GridTileSize;
-	WorldPos += GridBottomLeftCornerLocation;
-
-	return WorldPos;
 }
