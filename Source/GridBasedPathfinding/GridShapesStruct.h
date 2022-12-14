@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EShapesEnum.h"
 #include "GridShapesStruct.generated.h"
 
 USTRUCT(BlueprintType)
@@ -14,9 +13,6 @@ struct FGridShapesStruct
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector MeshSize;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EShapesEnum ShapeType;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMesh* Mesh;
