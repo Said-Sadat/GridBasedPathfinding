@@ -22,5 +22,6 @@ enum ETileStates
 	Hovered,
 	Selected,
 	Neighbour,
-	Available
+	Available,
+	Unavailable
 };

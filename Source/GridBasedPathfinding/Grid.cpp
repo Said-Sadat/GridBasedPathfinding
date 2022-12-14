@@ -109,6 +109,9 @@ FLinearColor AGrid::GetColourFromStates(TArray<TEnumAsByte<ETileStates>> States)
 	if(States.IsEmpty())
 		return FLinearColor::Black;
 
+	if(States.Contains(ETileStates::Unavailable))
+		return StateColour[Unavailable];
+
 	if(States.Contains(ETileStates::Hovered))
 		 return StateColour[Hovered];
 	

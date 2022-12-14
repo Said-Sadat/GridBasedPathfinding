@@ -85,7 +85,7 @@ void AGridManager::AddOccupierToTile(FVector2D Index, AActor* Actor)
 	
 	FTileData TileData = *GridTiles.Find(Index);
 	TileData.OccupyingActor = Actor;
-	TileData.TileStates.AddUnique(ETileStates::Available);
+	TileData.TileStates.AddUnique(ETileStates::Unavailable);
 	AddGridTile(TileData);
 }
 
@@ -95,7 +95,7 @@ void AGridManager::RemoveOccupierFromTile(FVector2D Index, AActor* Actor)
 
 	FTileData TileData = *GridTiles.Find(Index);
 	TileData.OccupyingActor = nullptr;
-	TileData.TileStates.Remove(ETileStates::Available);
+	TileData.TileStates.Remove(ETileStates::Unavailable);
 	AddGridTile(TileData);
 }
 
