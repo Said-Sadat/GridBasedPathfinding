@@ -17,6 +17,8 @@ class GRIDBASEDPATHFINDING_API AGridManager : public AGrid
 	UAStarPathfinding* AStarPathfinding;
 	TArray<FTileData> Path;
 	
+	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
+	
 public:	
 	// Sets default values for this actor's properties
 	AGridManager();
@@ -63,14 +65,11 @@ public:
 	TArray<FVector2D> GetTilesInRange(FVector2D StartingIndex, int Range);
 	
 	UFUNCTION(BlueprintCallable)
-	void SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex);
-
-	UFUNCTION(BlueprintCallable)
 	void AssignGridActorsToTiles();
 
 	UFUNCTION(BlueprintCallable)
 	void CalculatePath(FTileData StartNode, FTileData EndNode);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void GridActorPathToLocation(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList);
 };
