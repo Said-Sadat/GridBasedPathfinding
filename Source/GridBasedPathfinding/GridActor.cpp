@@ -61,15 +61,21 @@ void AGridActor::UpdateGridActorOnGrid()
 	
 	GridManager->CalculatePath(*GridManager->GridTiles.Find(LocationOnGrid), Tile);
 	
-	bool success;
+	//bool success;
 	TArray<FTileData> OutPath;
 	
-	if(RequestMovement.IsBound())
-		RequestMovement.Broadcast(this, Index, OutPath, success);
-	
-	if(success)
-		SetActorLocation(Tile.Transform.GetLocation());
+	/*if(RequestMovement.IsBound())
+		RequestMovement.Broadcast(this, Index, OutPath, success);*/
 
+	if(GridActorPath.IsBound())
+		GridActorPath.Broadcast(LocationOnGrid, Index, OutPath);
+
+	if(OutPath.Max() > 0)
+		UE_LOG(LogTemp, Warning, TEXT("GSAFSAF|ADFAE"));
+	
+	/*if(success)
+		SetActorLocation(Tile.Transform.GetLocation());
+*/
 	
 	ClearTilesInRange();
 }

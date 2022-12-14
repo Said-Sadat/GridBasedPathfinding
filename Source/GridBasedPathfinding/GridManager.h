@@ -74,6 +74,9 @@ public:
 	UFUNCTION()
 	void MoveGridActorToTileLocation(class AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success);
 
+	UFUNCTION()
+	void MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList);
+	
 	UFUNCTION(BlueprintCallable)
 	FVector GridToWorldPosition(FVector2D Index);
 };

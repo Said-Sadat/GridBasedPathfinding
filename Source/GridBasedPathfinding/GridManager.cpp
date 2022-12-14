@@ -182,6 +182,7 @@ void AGridManager::AssignGridActorsToTiles()
 		AddOccupierToTile(TileIndex, Actor);
 
 		GridActor->RequestMovement.AddDynamic(this, &AGridManager::MoveGridActorToTileLocation);
+		GridActor->GridActorPath.AddDynamic(this, &AGridManager::MoveGridAlongPath);
 	}
 }
 
@@ -201,7 +202,7 @@ void AGridManager::CalculatePath(FTileData StartNode, FTileData EndNode)
 
 void AGridManager::MoveGridActorToTileLocation(AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success)
 {
-	FVector2D GridActorLocation = GridActor->GetLocationOnGrid();
+	/*FVector2D GridActorLocation = GridActor->GetLocationOnGrid();
 
 	if(!GridTiles.Contains(GridActorLocation) || !GridTiles.Contains(TileIndex))
 	{
@@ -214,7 +215,24 @@ void AGridManager::MoveGridActorToTileLocation(AGridActor* GridActor, FVector2D 
 	GridActor->SetLocationOnGrid(TileIndex);
 	AddOccupierToTile(TileIndex, GridActor);
 
-	Success = true;
+	Success = true;*/
+
+	
+}
+
+void AGridManager::MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList)
+{
+	FTileData StartNode;
+	FTileData EndNode;
+
+	if(!GridTiles.Contains(StartIndex) || !GridTiles.Contains(EndIndex)) return;
+
+	StartNode = *GridTiles.Find(StartIndex);
+	EndNode = *GridTiles.Find(EndIndex);
+
+	CalculatePath(StartNode, EndNode);
+
+	OutList = Path;
 }
 
 FVector AGridManager::GridToWorldPosition(FVector2D Index)

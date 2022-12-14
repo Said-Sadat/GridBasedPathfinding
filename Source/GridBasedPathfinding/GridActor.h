@@ -9,6 +9,7 @@
 #include "GridActor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FRequestMovement, class AGridActor*, Actor, FVector2D, Destination, TArray<FTileData>&, OutPath, bool&, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FGridActorPath, FVector2D, ActorGridLocation, FVector2D, GridDestination, TArray<FTileData>&, OutPath);
 
 
 UCLASS()
@@ -33,6 +34,7 @@ public:
 	UGridModifierComponent* GridModifierComponent;
 
 	FRequestMovement RequestMovement;
+	FGridActorPath GridActorPath;
 
 protected:
 	// Called when the game starts or when spawned
