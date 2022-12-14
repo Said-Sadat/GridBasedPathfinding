@@ -42,6 +42,7 @@ void AGridActions::Tick(float DeltaTime)
 	UpdateTileCursor();
 }
 
+// Tile Cursor for visual indication of where the cursor is on the grid.
 void AGridActions::UpdateTileCursor()
 {
 	if(!GridManager) return;

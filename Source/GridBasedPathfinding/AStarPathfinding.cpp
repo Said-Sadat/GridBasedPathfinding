@@ -10,6 +10,7 @@ UAStarPathfinding::UAStarPathfinding()
 {
 }
 
+//Complete pathfinding algorithm using TileData
 TArray<FTileData> UAStarPathfinding::AStarPathfinding(FTileData StartNode, FTileData EndNode, TMap<FVector2D, FTileData> gridMap)
 {
 	TArray<FTileData> Empty;

@@ -60,12 +60,14 @@ void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D
 	}
 }
 
+// Used to add a Tile to the grid with new data.
 void AGridManager::AddGridTile(FTileData TileData)
 {
 	GridTiles.Add(TileData.Index, TileData);
 	UpdateGrid(TileData);
 }
 
+// Adds state to Tile and manipulates the colour of the Tile depending on the State
 void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
 {
 	if(!GridTiles.Contains(Index)) return;
@@ -76,6 +78,7 @@ void AGridManager::AddStateToTile(FVector2D Index, ETileStates TileState)
 	AddGridTile(TileData);
 }
 
+// Adds an occupier to a Tile which allows for Tiles to Store An Actor that is currently occupying it.
 void AGridManager::AddOccupierToTile(FVector2D Index, AActor* Actor)
 {
 	if(!GridTiles.Contains(Index)) return;
@@ -118,8 +121,8 @@ TArray<FVector2D> AGridManager::GetTilesInRange(FVector2D StartingIndex, int Ran
 		TArray<FVector2D> SurroundingTiles;
 
 		for (auto Tile : InRangeTiles)
-			for (auto NeighbourTile : GridTiles[Tile].GetTileNeigbours(GridTiles))
-				SurroundingTiles.Add(NeighbourTile);
+			for (auto NeighbourTile : GridTiles[Tile].GetTileNeigbours(GridTiles, 0))
+				SurroundingTiles.Add(NeighbourTile.Index);
 
 		for (auto SurroundingTile : SurroundingTiles)
 			InRangeTiles.AddUnique(SurroundingTile);
@@ -130,6 +133,7 @@ TArray<FVector2D> AGridManager::GetTilesInRange(FVector2D StartingIndex, int Ran
 	return InRangeTiles;
 }
 
+// Scans Environment and Snaps Tiles to the the floor. If there is nothing below the tile, Tile is removed from the grid.
 void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, FVector2D TileIndex)
 {
 	TArray<FHitResult> OutHits;
@@ -162,6 +166,7 @@ void AGridManager::SnapTileToFloor(FTransform TileTransform, FVector TileSize, F
 	}
 }
 
+// Scans Game world for Grid Actors and any that are above tiles they are assigned to it.
 void AGridManager::AssignGridActorsToTiles()
 {
 	TArray<AActor*> OutActors;
@@ -199,6 +204,7 @@ void AGridManager::CalculatePath(FTileData StartNode, FTileData EndNode)
 		AddStateToTile(Node.Index, ETileStates::Neighbour);
 }
 
+// Binds to event present in Grid Actors to get a path to destination.
 void AGridManager::GridActorPathToLocation(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList)
 {
 	FTileData StartNode;

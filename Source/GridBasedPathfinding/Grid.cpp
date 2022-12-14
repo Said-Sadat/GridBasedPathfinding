@@ -46,6 +46,7 @@ FTransform AGrid::GetOffsetFromGround(FTransform Transform, float Offset)
 	return Transform;
 }
 
+// Adds instance to InstanceStaticMesh
 void AGrid::AddInstance(FVector2D Index, FTransform InstanceTransform, TArray<TEnumAsByte<ETileStates>> States)
 {
 	RemoveInstance(Index);
@@ -55,18 +56,20 @@ void AGrid::AddInstance(FVector2D Index, FTransform InstanceTransform, TArray<TE
 
 	FLinearColor Color = GetColourFromStates(States);
 
+	// Custom Data value allows for changes to Material colour
 	InstancedStaticMesh->SetCustomDataValue(InstanceIndex.Find(Index), 0, Color.R);
 	InstancedStaticMesh->SetCustomDataValue(InstanceIndex.Find(Index), 1, Color.G);
 	InstancedStaticMesh->SetCustomDataValue(InstanceIndex.Find(Index), 2, Color.B);
 
 	float fill;
 
-	//Default state is None therefore if there is more than one state it means it should be filled.
+	//Default state is None therefore if there is more than one state it means Tile Material should be filled.
 	if(States.Max() > 0)
 		fill = 1;
 	else
 		fill = 0;
-	
+
+	//Custom Data Value for fill parameter in Material
 	InstancedStaticMesh->SetCustomDataValue(InstanceIndex.Find(Index), 3, fill);
 }
 
@@ -84,6 +87,8 @@ void AGrid::ClearInstances()
 	InstanceIndex.Empty();
 }
 
+
+// Updates visuals of the grid
 void AGrid::UpdateGrid(FTileData TileData)
 {
 	RemoveInstance(TileData.Index);
@@ -94,6 +99,7 @@ void AGrid::UpdateGrid(FTileData TileData)
 		return;
 	}
 
+	// Offset used to prevent Z fighting with grid and environment
 	TileData.Transform = GetOffsetFromGround(TileData.Transform, GridOffset);
 	AddInstance(TileData.Index, TileData.Transform, TileData.TileStates);
 }
@@ -128,6 +134,7 @@ FVector AGrid::GetGridTileSize()
 	return GridTileSize;
 }
 
+// Grid Bottom Left Corner is calculated to get the location of the first tile in the index which would be X = 0, Y = 0
 FVector AGrid::CalculateGridBottomLeftCorner(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	FVector GridTileCount3D = FVector(TileCount.X, TileCount.Y, 0);

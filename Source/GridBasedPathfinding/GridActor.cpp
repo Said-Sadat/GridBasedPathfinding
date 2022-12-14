@@ -7,6 +7,7 @@
 #include "GridUtilities.h"
 #include "Kismet/GameplayStatics.h"
 
+// Moves the Grid Actor along the Path
 void AGridActor::MoveAlongPath()
 {
 	if(!OutPath.IsValidIndex(1))
@@ -103,6 +104,7 @@ FVector2D AGridActor::GetLocationOnGrid()
 	return LocationOnGrid;
 }
 
+// When Grid Actor is clicked, the available tiles are shown on the grid for where the Actor can move to.
 void AGridActor::SetTilesInRange(FVector2D Index)
 {
 	for (auto tile : TilesInRange)

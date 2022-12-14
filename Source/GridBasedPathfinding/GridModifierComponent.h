@@ -16,6 +16,7 @@ public:
 	// Sets default values for this component's properties
 	UGridModifierComponent();
 
+	// TileType to specify what the purpose of the modifier is.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Grid")
 	TEnumAsByte<ETileTypes> TileType;
 

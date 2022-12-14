@@ -37,7 +37,6 @@ public:
 
 	void InitializeNode();
 	
-	TArray<FVector2D> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap);
 	TArray<FTileData> GetTileNeigbours(TMap<FVector2D, FTileData> GridMap, int filler);
 
 	inline bool operator==(FTileData a) const
