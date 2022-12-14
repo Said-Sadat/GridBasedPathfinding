@@ -181,7 +181,6 @@ void AGridManager::AssignGridActorsToTiles()
 		AddStateToTile(TileIndex, ETileStates::Available);
 		AddOccupierToTile(TileIndex, Actor);
 
-		GridActor->RequestMovement.AddDynamic(this, &AGridManager::MoveGridActorToTileLocation);
 		GridActor->GridActorPath.AddDynamic(this, &AGridManager::MoveGridAlongPath);
 	}
 }
@@ -198,26 +197,6 @@ void AGridManager::CalculatePath(FTileData StartNode, FTileData EndNode)
 
 	for(auto Node : Path)
 		AddStateToTile(Node.Index, ETileStates::Neighbour);
-}
-
-void AGridManager::MoveGridActorToTileLocation(AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success)
-{
-	/*FVector2D GridActorLocation = GridActor->GetLocationOnGrid();
-
-	if(!GridTiles.Contains(GridActorLocation) || !GridTiles.Contains(TileIndex))
-	{
-		Success = false;
-		return;
-	}
-
-	RemoveOccupierFromTile(GridActor->GetLocationOnGrid(), GridActor);
-
-	GridActor->SetLocationOnGrid(TileIndex);
-	AddOccupierToTile(TileIndex, GridActor);
-
-	Success = true;*/
-
-	
 }
 
 void AGridManager::MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList)

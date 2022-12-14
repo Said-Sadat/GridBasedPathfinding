@@ -70,10 +70,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void CalculatePath(FTileData StartNode, FTileData EndNode);
-
-	UFUNCTION()
-	void MoveGridActorToTileLocation(class AGridActor* GridActor, FVector2D TileIndex, TArray<FTileData>& OutPath, bool& Success);
-
+	
 	UFUNCTION()
 	void MoveGridAlongPath(FVector2D StartIndex, FVector2D EndIndex, TArray<FTileData>& OutList);
 	
