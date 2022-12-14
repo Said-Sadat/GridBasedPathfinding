@@ -36,7 +36,7 @@ void AGridManager::Tick(float DeltaTime)
 void AGridManager::SpawnGrid(FVector CenterLocation, FVector TileSize, FVector2D TileCount)
 {
 	GridTiles.Empty();
-	InitializeGridMeshInstance(GridShapesStruct.FlatMesh);
+	InitializeGridMeshInstance(GridShapesStruct.FlatMesh, GridShapesStruct.FlatMeshMaterial);
 	
 	GridBottomLeftCornerLocation = CalculateGridBottomLeftCorner(CenterLocation, TileSize, TileCount);
 

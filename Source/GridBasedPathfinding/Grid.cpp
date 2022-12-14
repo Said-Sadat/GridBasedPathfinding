@@ -30,11 +30,12 @@ void AGrid::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AGrid::InitializeGridMeshInstance(UStaticMesh* StaticMesh)
+void AGrid::InitializeGridMeshInstance(UStaticMesh* StaticMesh, UMaterial* Material)
 {
 	ClearInstances();
 	
 	InstancedStaticMesh->SetStaticMesh(StaticMesh);
+	InstancedStaticMesh->SetMaterial(0, Material);
 }
 
 FTransform AGrid::GetOffsetFromGround(FTransform Transform, float Offset)

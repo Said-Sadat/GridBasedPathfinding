@@ -13,16 +13,10 @@ struct FGridShapesStruct
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector MeshSize;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* Mesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstance* MeshMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMesh* FlatMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstance* FlatBoarderMaterial;
+	UMaterial* FlatMeshMaterial;
 };

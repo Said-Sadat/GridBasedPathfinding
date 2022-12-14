@@ -50,7 +50,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	void InitializeGridMeshInstance(UStaticMesh* StaticMesh);
+	void InitializeGridMeshInstance(UStaticMesh* StaticMesh, UMaterial* Material);
 
 	UFUNCTION(BlueprintCallable)
 	FTransform GetOffsetFromGround(FTransform Transform, float Offset);
